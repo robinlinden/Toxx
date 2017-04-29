@@ -26,6 +26,7 @@
 #include "../ui/switch.h"
 #include "../ui/text.h"
 
+#include <stdio.h>
 #include <string.h>
 
 /* Header for friend chat window */

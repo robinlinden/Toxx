@@ -8,17 +8,16 @@
 
 #include "av/audio.h"
 #include "av/utox_av.h"
-
+#include "layout/group.h"
 #include "native/notify.h"
-
 #include "ui/edit.h"
 
-#include "layout/group.h"
+#include <tox/tox.h>
 
-#include <pthread.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <tox/tox.h>
+#include <pthread.h>
 
 static GROUPCHAT *group = NULL;
 
