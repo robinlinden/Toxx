@@ -46,23 +46,35 @@ else()
 endif()
 
 
-###########
-# Options #
-###########
+#############################
+# System-dependent defaults #
+#############################
 
-if (UTOX_STATIC AND WINDOWS)
+# Windows only compiles statically.
+if (WINDOWS)
+    set(STATIC_DEFAULT ON)
+else()
+    set(STATIC_DEFAULT OFF)
+endif()
+
+# Windows doesn't compile with asan enabled.
+if (WINDOWS)
     set(ASAN_DEFAULT OFF)
 else()
     set(ASAN_DEFAULT ON)
 endif()
 
-option(ENABLE_ASAN          "Enable Address Sanitizer on debug builds"          ${ASAN_DEFAULT})
-option(ENABLE_TESTS         "Whether to build test binaries (currently linux only)"         ON )
-option(ENABLE_WERROR        "Error on Warning, whether to put -Werror flag to the compiler" OFF)
-option(ENABLE_FILTERAUDIO   "Enable Filter Audio"                                           ON )
 
-option(UTOX_STATIC          "Link uTox statically"                                          OFF)
-option(TOXCORE_STATIC       "Build uTox with the static version of Toxcore"                 OFF)
+###########
+# Options #
+###########
+
+option(UTOX_STATIC        "Link uTox statically"                                 ${STATIC_DEFAULT} )
+option(TOXCORE_STATIC     "Build uTox with the static version of Toxcore"        ${STATIC_DEFAULT} )
+option(ENABLE_ASAN        "Enable Address Sanitizer on debug builds"               ${ASAN_DEFAULT} )
+option(ENABLE_TESTS       "Whether to build test binaries (currently linux only)"               ON )
+option(ENABLE_WERROR      "Error on Warning, whether to put -Werror flag to the compiler"       OFF)
+option(ENABLE_FILTERAUDIO "Enable Filter Audio"                                                 ON )
 
 
 #################################
@@ -112,7 +124,7 @@ include(CheckCCompilerFlag)
 function(add_cflag flag)
     string(REGEX REPLACE "[^a-zA-Z0-9_]" "_" var ${flag})
     if(NOT DEFINED HAVE_C${var})
-        message(STATUS "Checking for flag: ${flag}")
+        message(STATUS "Checking for C compiler flag: ${flag}")
     endif()
     set(CMAKE_REQUIRED_QUIET TRUE)
 
@@ -120,7 +132,7 @@ function(add_cflag flag)
     if(HAVE_C${var})
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${flag}" PARENT_SCOPE)
     else()
-        message(WARNING "Unable to find flag: ${flag}")
+        message(STATUS "Warning: can't find flag ${flag}")
     endif()
 endfunction()
 
@@ -160,14 +172,13 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU")
     endif()
 elseif(CMAKE_C_COMPILER_ID MATCHES "Clang")
     add_cflag("-flto")
-
     add_cflag("-Wno-missing-field-initializers")
 
     if(NOT ENABLE_ASAN)
         add_cflag("-fsanitize=safe-stack")
     endif()
 else()
-    message(SEND_ERROR "Unknown compiler name")
+    message(STATUS "Unknown compiler name: You may have to set up your compiler flags yourself.")
 endif()
 
 # set define for GIT_VERSION
@@ -315,7 +326,7 @@ endif()
 
 if(ENABLE_TESTS)
   if(UNIX)
-    # tests currently only run on linux
+    # Tests currently only run on Linux.
     enable_testing()
     add_subdirectory(tests)
   endif()
@@ -326,7 +337,6 @@ endif()
 # Build info #
 ##############
 
-# print a summary of build options
 message("Build options:")
 message("----------------------------------")
 message("- Add ASAN:                ${ENABLE_ASAN}")
@@ -337,7 +347,8 @@ message("- Toxcore Static:          ${TOXCORE_STATIC}")
 message("-- Platform Options --------------")
 message("- Enable Tests             ${ENABLE_TESTS}")
 
-message("* CMAKE SYSTEM is '${CMAKE_SYSTEM_NAME}'")
+message("* CMake system is '${CMAKE_SYSTEM_NAME}'")
+message("* CMake build type is '${CMAKE_BUILD_TYPE}'")
 message("* C Compiler is '${CMAKE_C_COMPILER}' with the following flags:")
 message("* C flags for Debug:       ${CMAKE_C_FLAGS_DEBUG}")
 message("* C flags for Release:     ${CMAKE_C_FLAGS_RELEASE}")
