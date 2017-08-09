@@ -10,10 +10,14 @@ if(WIN32)
     target_link_libraries(utoxAV OpenAL32) # Windows needs to be linked against OpenAL32
 else()
     # Both openal and opus are required for the static Linux builds on Jenkins.
+    find_package(libopus REQUIRED)
+    include_directories(${LIBOPUS_INCLUDE_DIRS})
+    target_link_libraries(utoxAV ${LIBOPUS_LIBRARIES})
     target_link_libraries(utoxAV openal)
-    target_link_libraries(utoxAV opus)
 endif()
 
 if(ENABLE_FILTERAUDIO)
-    target_link_libraries(utoxAV filteraudio)
+    find_package(libfilteraudio REQUIRED)
+    include_directories(${LIBFILTERAUDIO_INCLUDE_DIRS})
+    target_link_libraries(utoxAV ${LIBFILTERAUDIO_LIBRARIES})
 endif()

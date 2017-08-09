@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.2)
 project(uTox LANGUAGES C)
 
+
 #####################
 ## Project Metadata #
 #####################
@@ -203,10 +204,6 @@ if(ENABLE_WERROR)
     add_cflag("-Werror")
 endif()
 
-if(ENABLE_FILTERAUDIO)
-    add_cflag("-DAUDIO_FILTERING")
-endif()
-
 if(UTOX_STATIC)
     if(UNIX)
         add_cflag("-Wl -Bstatic -lopus -lopenal -lfilteraudio -Bdynamic -lrt -lm -lpthread -ldl")
@@ -216,8 +213,8 @@ if(UTOX_STATIC)
 endif()
 
 
-if(TOXCORE_STATIC)
-    set(TOX_LIBS
+if(TOXCORE_STATIC AND WINDOWS)
+    find_package(libtox REQUIRED COMPONENTS
         toxencryptsave
         toxav
         toxcore
@@ -228,28 +225,25 @@ if(TOXCORE_STATIC)
         toxnetcrypto
         toxcrypto
         toxnetwork
-        )
+    )
 else()
-    set(TOX_LIBS
-        toxencryptsave
-        toxav
-        toxcore
-        )
+    find_package(libtox REQUIRED COMPONENTS toxencryptsave toxav toxcore)
 endif()
+include_directories(${LIBTOX_INCLUDE_DIRS})
+set(TOX_LIBS ${LIBTOX_LIBRARIES})
 
-if(WIN32)
+find_package(libsodium REQUIRED)
+include_directories(${LIBSODIUM_INCLUDE_DIRS})
+set(LIBRARIES ${LIBRARIES} ${LIBSODIUM_LIBRARIES})
+
+if(WINDOWS)
     if(CMAKE_BUILD_TYPE STREQUAL "Release")
         set(GUI_TYPE WIN32)
     endif()
 
-    include_directories(SYSTEM libs/toktok/include libs/windows-x64/include/)
-    if(WIN64)
-        link_directories(libs/toktok/lib /usr/x86_64-w64-mingw32/lib/ libs/windows-x64/lib)
-    else()
-        link_directories(libs/toktok_32/lib /usr/i686-w64-mingw32/lib/ libs/windows-x32/lib)
-    endif()
+    link_directories(${CMAKE_PREFIX_PATH}/lib)
 
-    ## Needed to build the widows icon
+    # Windows icons
     enable_language(RC)
     set(WINDOWS_ICON src/windows/utox.rc)
 
@@ -259,7 +253,7 @@ elseif(UNIX)
 
     if(LINUX)
         # Required for v4l (at least in the Linux static builds on Jenkins)
-        set(LIBRARIES "rt")
+        set(LIBRARIES ${LIBRARIES} "rt")
     endif()
 endif()
 
@@ -309,7 +303,7 @@ add_executable(utox ${GUI_TYPE}
 
 target_link_libraries(utox
         utoxAV        utoxNATIVE      utoxUI
-        ${TOX_LIBS}   ${LIBRARIES}    sodium
+        ${TOX_LIBS}   ${LIBRARIES}
         vpx           pthread         m )
 
 set_property(TARGET utox PROPERTY C_STANDARD 11)
