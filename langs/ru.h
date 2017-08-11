@@ -8,6 +8,9 @@ msgid(LANG_ENGLISH_NAME)
 msgstr("RUSSIAN")
 
 
+/******************************************************************************
+ *** MISC & UNSORTED                                                        ***
+ ******************************************************************************/
 msgid(REQ_SENT)
 msgstr("Запрос на добавление в контакты отправлен. Ваш собеседник станет доступен в сети, как только подтвердит запрос.")
 
@@ -290,6 +293,9 @@ msgstr("Устройство воспроизведения звука")
 msgid(VIDEOINPUTDEVICE)
 msgstr("Устройство захвата видео")
 
+msgid(VIDEOFRAMERATE)
+msgstr("Частота кадров видео (FPS)")
+
 msgid(PUSH_TO_TALK)
 msgstr("Нажать для разговора")
 
@@ -308,8 +314,11 @@ msgstr("Занят(а)")
 msgid(SETTINGS_UI_MINI_ROSTER)
 msgstr("Компактный список контактов")
 
+msgid(SETTINGS_UI_AUTO_HIDE_SIDEBAR)
+msgstr("Скрывать боковую панель автоматически")
+
 msgid(NOT_CONNECTED)
-msgstr("Не соединён")
+msgstr("Нет сети")
 
 msgid(NOT_CONNECTED_SETTINGS)
 msgstr("Изменить настройки сети")
@@ -333,22 +342,22 @@ msgid(PROFILE_PASSWORD)
 msgstr("Пароль профиля")
 
 msgid(LOCK_UTOX)
-msgstr("Отсоединение от сети и блокировка этого профиля.")
+msgstr("Отключиться от сети и заблокировать профиль")
 
 msgid(SHOW_UI_PASSWORD)
 msgstr("Показать поле пароля")
 
 msgid(SHOW_UI_PASSWORD_TOOLTIP)
-msgstr("Нажмите чтобы показать поле пароля профиля. Изменения, сделанные здесь, применяются сразу!")
+msgstr("Показать поле пароля профиля. Изменения, сделанные здесь, применяются сразу!")
 
 msgid(HIDE_UI_PASSWORD)
 msgstr("Скрыть поле пароля")
 
 msgid(HIDE_UI_PASSWORD_TOOLTIP)
-msgstr("Нажмите чтобы скрыть поле пароля профиля.")
+msgstr("Скрыть поле пароля профиля")
 
 msgid(LOCK)
-msgstr("Блокировка")
+msgstr("Заблокировать")
 
 msgid(AUDIO_VIDEO)
 msgstr("Аудио/видео")
@@ -441,7 +450,7 @@ msgid(SET_ALIAS)
 msgstr("Назначить псевдоним")
 
 msgid(ALIAS)
-msgstr("псевдоним")
+msgstr("Псевдоним")
 
 msgid(SENDMESSAGE)
 msgstr("Отправить сообщение")
