@@ -506,6 +506,12 @@ void ft_friend_online(Tox *tox, uint32_t friend_number) {
             file->via.file = fopen((char *)file->path, "rb+");
             ft_send_file(tox, friend_number, file->via.file, file->path, strlen((char *)file->path), file->data_hash);
         }
+
+        char name[UTOX_FILE_NAME_LENGTH];
+        if (resumeable_name(file, name)) {
+            utox_get_file(name, NULL, UTOX_FILE_OPTS_DELETE);
+        }
+
         free(file);
     }
 }
