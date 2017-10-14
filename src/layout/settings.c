@@ -1012,7 +1012,6 @@ static void edit_video_fps_onlosefocus(EDIT *UNUSED(edit)) {
     }
 }
 
-#include "../screen_grab.h"
 static void dropdown_video_onselect(uint16_t i, const DROPDOWN *UNUSED(dm)) {
     if (i == 1) {
         utox_screen_grab_desktop(1);
