@@ -299,6 +299,7 @@ static void ugtk_save_chatlog_thread(void *args) {
     size_t friend_number = (size_t)args;
     FRIEND *f = get_friend(friend_number);
     if (!f) {
+        utoxGTK_open = false;
         return;
     }
 
@@ -330,12 +331,13 @@ void ugtk_openfilesend(void) {
     if (utoxGTK_open) {
         return;
     }
-    utoxGTK_open = true;
+
     FRIEND *f = flist_get_friend();
     if (!f) {
         return;
     }
 
+    utoxGTK_open = true;
     uint32_t number = f->number;
     thread(ugtk_opensendthread, (void*)(size_t)number);
 }
@@ -352,7 +354,7 @@ void ugtk_native_select_dir_ft(uint32_t UNUSED(fid), FILE_TRANSFER *file) {
     if (utoxGTK_open) {
         return;
     }
-    utoxGTK_open   = true;
+    utoxGTK_open = true;
     thread(ugtk_savethread, file);
 }
 
