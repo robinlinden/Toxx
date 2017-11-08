@@ -135,6 +135,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} $ENV{CFLAGS}")
 ## Add all warning flags we can.
 add_cflag("-Wall")
 add_cflag("-Wextra")
+add_cflag("-Wpedantic")
 add_cflag("-Wpointer-arith")
 
 ## Warnings we don't tolerate
