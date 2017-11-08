@@ -306,7 +306,8 @@ static void break_file(FILE_TRANSFER *file) {
 
     switch (file->status) {
         case FILE_TRANSFER_STATUS_NONE: {
-            return kill_file(file);
+            kill_file(file);
+            return;
         }
 
         case FILE_TRANSFER_STATUS_COMPLETED:
@@ -696,7 +697,8 @@ static void incoming_file_callback_request(Tox *tox, uint32_t friend_number, uin
     }
 
     if (kind == TOX_FILE_KIND_AVATAR) {
-        return incoming_avatar(tox, friend_number, file_number, size);
+        incoming_avatar(tox, friend_number, file_number, size);
+        return;
     }
 
     if (settings.accept_inline_images
@@ -704,7 +706,8 @@ static void incoming_file_callback_request(Tox *tox, uint32_t friend_number, uin
         && name_length == (sizeof("utox-inline.png") - 1)
         && memcmp(name, "utox-inline.png", name_length) == 0)
     {
-        return incoming_inline_image(tox, friend_number, file_number, size);
+        incoming_inline_image(tox, friend_number, file_number, size);
+        return;
     }
 
     FILE_TRANSFER *ft = make_file_transfer(friend_number, file_number);
