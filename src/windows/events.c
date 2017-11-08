@@ -130,6 +130,12 @@ LRESULT CALLBACK WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
         return DefWindowProcW(window, msg, wParam, lParam);
     }
 
+    // Deal with special uTox messages.
+    if (msg >= WM_TOX && msg <= WM_TOX + 128) {
+        utox_message_dispatch(msg - WM_TOX, wParam >> 16, wParam, (void *)lParam);
+        return false;
+    }
+
     switch (msg) {
         case WM_QUIT:
         case WM_CLOSE:
@@ -487,11 +493,6 @@ LRESULT CALLBACK WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
                 do_tox_url(data->lpData, data->cbData);
             }
 
-            return false;
-        }
-
-        case WM_TOX ... WM_TOX + 128: {
-            utox_message_dispatch(msg - WM_TOX, wParam >> 16, wParam, (void *)lParam);
             return false;
         }
     }
