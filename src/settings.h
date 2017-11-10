@@ -79,34 +79,34 @@ typedef struct utox_save {
 
     uint8_t proxyenable;
 
-    uint8_t logging_enabled : 1;
-    uint8_t audible_notifications_enabled : 1;
-    uint8_t filter : 1;
-    uint8_t audio_filtering_enabled : 1;
-    uint8_t close_to_tray : 1;
-    uint8_t start_in_tray : 1;
-    uint8_t auto_startup : 1;
-    uint8_t no_typing_notifications : 1;
+    unsigned logging_enabled : 1;
+    unsigned audible_notifications_enabled : 1;
+    unsigned filter : 1;
+    unsigned audio_filtering_enabled : 1;
+    unsigned close_to_tray : 1;
+    unsigned start_in_tray : 1;
+    unsigned auto_startup : 1;
+    unsigned no_typing_notifications : 1;
 
     uint16_t audio_device_in;
     uint16_t audio_device_out;
 
     uint8_t theme;
 
-    uint8_t push_to_talk         : 1;
-    uint8_t use_mini_flist       : 1;
-    uint8_t group_notifications  : 4;
-    uint8_t status_notifications : 1;
-    uint8_t magic_flist_enabled  : 1;
+    unsigned push_to_talk         : 1;
+    unsigned use_mini_flist       : 1;
+    unsigned group_notifications  : 4;
+    unsigned status_notifications : 1;
+    unsigned magic_flist_enabled  : 1;
 
     uint32_t utox_last_version; // I don't like this here either,
     // but I'm not ready to rewrite and update this struct yet.
 
-    uint8_t auto_update         : 1; // Unused, included here because compatability.
-    uint8_t update_to_develop   : 1; // Unused, included here because compatability.
-    uint8_t send_version        : 1; // Unused, included here because compatability.
-    uint8_t zero_2              : 5;
-    uint8_t zero_3              : 8;
+    unsigned auto_update         : 1; // Unused, included here because compatability.
+    unsigned update_to_develop   : 1; // Unused, included here because compatability.
+    unsigned send_version        : 1; // Unused, included here because compatability.
+    unsigned zero_2              : 5;
+    unsigned zero_3              : 8;
 
     uint16_t language;
     uint8_t video_fps;
