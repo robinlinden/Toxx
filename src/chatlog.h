@@ -16,10 +16,10 @@ typedef struct {
     size_t author_length;
     size_t msg_length;
 
-    uint8_t author : 1;
-    uint8_t receipt : 1;
-    uint8_t flags : 5;
-    uint8_t deleted : 1;
+    unsigned author : 1;
+    unsigned receipt : 1;
+    unsigned flags : 5;
+    unsigned deleted : 1;
 
     uint8_t msg_type;
 

@@ -29,10 +29,10 @@ typedef unsigned int ALuint;
 typedef struct friend_meta_data {
     uint8_t version;
 
-    uint8_t ft_autoaccept : 1;
-    uint8_t ft_autoaccept_path : 1;
-    uint8_t skip_msg_logging : 1;
-    uint8_t unused : 5;
+    unsigned ft_autoaccept : 1;
+    unsigned ft_autoaccept_path : 1;
+    unsigned skip_msg_logging : 1;
+    unsigned unused : 5;
 
     uint8_t zero[30];
 
