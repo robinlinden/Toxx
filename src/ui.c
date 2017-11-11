@@ -332,7 +332,7 @@ void ui_rescale(uint8_t scale) {
     static ret (*x##func[])(void *p, ##__VA_ARGS__) = {                                                                 \
         (void *)background_##x, (void *)messages_##x, (void *)inline_video_##x, (void *)flist_##x,  (void *)button_##x, \
         (void *)switch_##x,     (void *)dropdown_##x, (void *)edit_##x,         (void *)scroll_##x,                     \
-    };
+    }
 
 MAKE_FUNC(void, draw, int x, int y, int width, int height);
 MAKE_FUNC(bool, mmove, int x, int y, int width, int height, int mx, int my, int dx, int dy);
