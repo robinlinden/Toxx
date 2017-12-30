@@ -213,22 +213,7 @@ if(UTOX_STATIC)
 endif()
 
 
-if(TOXCORE_STATIC AND WINDOWS)
-    find_package(libtox REQUIRED COMPONENTS
-        toxencryptsave
-        toxav
-        toxcore
-        toxgroup
-        toxmessenger
-        toxfriends
-        toxdht
-        toxnetcrypto
-        toxcrypto
-        toxnetwork
-    )
-else()
-    find_package(libtox REQUIRED COMPONENTS toxencryptsave toxav toxcore)
-endif()
+find_package(libtox REQUIRED)
 include_directories(${LIBTOX_INCLUDE_DIRS})
 set(TOX_LIBS ${LIBTOX_LIBRARIES})
 
