@@ -5,6 +5,7 @@
 
 #include "../avatar.h"
 #include "../flist.h"
+#include "../friend.h"
 #include "../macros.h"
 #include "../self.h"
 #include "../theme.h"
@@ -104,7 +105,6 @@ static void draw_user_badge(int x, int y, int width, int UNUSED(height)) {
 
 /* Left side bar, holds the user, the roster, and the setting buttons */
 PANEL
-
 panel_side_bar = {
     .type = PANEL_NONE,
     .disabled = 0,
@@ -151,14 +151,14 @@ panel_flist = {
         NULL
     }
 },
-    panel_flist_list = {
-        .type           = PANEL_LIST,
-        .content_scroll = &scrollbar_flist,
-    };
+panel_flist_list = {
+    .type           = PANEL_LIST,
+    .content_scroll = &scrollbar_flist,
+};
 
-
-#include "../friend.h"
 static void e_search_onchange(EDIT *edit) {
+    static char search_data[1024];
+
     char *data = edit->data;
     uint16_t length = edit->length > sizeof search_data ? sizeof search_data - 1 : edit->length;
 

@@ -95,10 +95,6 @@ static void call_notify(FRIEND *f, uint8_t status) {
 void utox_message_dispatch(UTOX_MSG utox_msg_id, uint16_t param1, uint16_t param2, void *data) {
     switch (utox_msg_id) {
         /* General core and networking messages */
-        case TOX_DONE: {
-            /* Does nothing. */
-            break;
-        }
         case DHT_CONNECTED: {
             /* param1: connection status (1 = connected, 0 = disconnected) */
             tox_connected = param1;

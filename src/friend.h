@@ -43,12 +43,6 @@ typedef struct friend_meta_data {
 } FRIEND_META_DATA;
 #define METADATA_VERSION 0
 
-typedef struct friend_meta_data_old {
-    size_t  alias_length;
-    uint8_t data[];
-} FRIEND_META_DATA_OLD;
-
-
 typedef struct utox_friend {
     uint8_t cid[TOX_PUBLIC_KEY_SIZE]; // TODO DEPERCATED REMOVE!
 

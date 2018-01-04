@@ -17,6 +17,9 @@
 #include <sys/shm.h>
 #include <sys/stat.h>
 
+// Is the video stream just a selection of the desktop
+#define isdesktop(x) ((size_t)(x) == 1)
+
 #define MAX_VID_WINDOWS 32 // TODO drop this for dynamic allocation
 static Window video_win[MAX_VID_WINDOWS]; // TODO we should allocate this dynamically but this'll work for now
 static Window preview;        // Video preview

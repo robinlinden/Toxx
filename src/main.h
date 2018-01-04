@@ -26,10 +26,6 @@
 #define MAIN_WIDTH 750
 #define MAIN_HEIGHT 500
 
-#ifndef __OBJC__
-#define volatile(x)(x)
-#endif
-
 /* Support for large files. */
 #define _LARGEFILE_SOURCE
 #define _FILE_OFFSET_BITS 64

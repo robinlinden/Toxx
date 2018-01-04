@@ -6,7 +6,6 @@
 /* uTox client thread messages (received by the client thread) */
 typedef enum utox_msg_id {
     /* General core and networking messages */
-    TOX_DONE, // 0
     DHT_CONNECTED,
 
     /* OS interaction/integration messages*/

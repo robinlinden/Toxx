@@ -38,19 +38,6 @@
 
 static bool save_needed = true;
 
-enum {
-    LOG_FILE_MSG_TYPE_TEXT   = 0,
-    LOG_FILE_MSG_TYPE_ACTION = 1,
-};
-
-typedef struct {
-    uint64_t time;
-    uint16_t namelen, length;
-    uint8_t  flags;
-    uint8_t  msg_type;
-    uint8_t  zeroes[2];
-} LOG_FILE_MSG_HEADER_COMPAT;
-
 static void tox_thread_message(Tox *tox, ToxAV *av, uint64_t time, uint8_t msg, uint32_t param1,
                                uint32_t param2, void *data);
 

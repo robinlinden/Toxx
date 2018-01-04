@@ -23,6 +23,10 @@ typedef struct scrollable SCROLLABLE;
                           (ui_gettext(settings.language, (STR_##x))->length)))
 #define SPTRFORLANG(l, x) (ui_gettext((l), (x)))
 
+// True if x and y are within the supplied rectangle
+#define inrect(x, y, rx, ry, width, height) \
+    ((x) >= (rx) && (y) >= (ry) && (x) < ((rx) + (width)) && (y) < ((ry) + (height)))
+
 // TODO: Create ui_native headers or something.
 // This is hard to read. I know. I'm sorry.
 // This is to stop a circular dependency between svg.c and xlib/main.h.
@@ -48,7 +52,6 @@ struct utox_mouse {
 } mouse;
 
 uint8_t cursor;
-bool mdown;
 
 enum {
     FONT_TEXT,
@@ -103,32 +106,22 @@ bool panel_mwheel(PANEL *p, int x, int y, int width, int height, double d, bool 
 bool panel_mup(PANEL *p);
 bool panel_mleave(PANEL *p);
 
-char search_data[1024]; // TODO this is NOT where this belongs
-
 double ui_scale;
 
-#define SCALE(x)      ((int)(((double)x) * (ui_scale / 10.0)))
-#define SCALE_DIV(x) (((int)(((double)x) * (ui_scale / 10.0))) ?: 1)
-
-#define UI_FSCALE(x)      (((double)x) * (ui_scale / 10.0))
-#define UI_FSCALE_DIV(x) ((((double)x) * (ui_scale / 10.0)) ?: 1)
-
+#define SCALE(x) ((int)(((double)x) * (ui_scale / 10.0)))
+#define UI_FSCALE(x) (((double)x) * (ui_scale / 10.0))
 #define UN_SCALE(x) (((int)(((double)x) / (ui_scale / 10.0))))
 
 #define drawstr(x, y, i) drawtext(x, y, S(i), SLEN(i))
-#define drawstr_getwidth(x, y, str) drawtext_getwidth(x, y, (char *)str, sizeof(str) - 1)
-#define strwidth(x) textwidth((char *)x, sizeof(x) - 1)
 
 /* colors */
 #define GRAY(x) (((x) << 16) | ((x) << 8) | (x))
-#define BLACK 0
 #define C_RED RGB(200, 78, 78)
 #define C_SCROLL GRAY(209)
 
 /* These are the new defines to help align UI elements, the new ones must use a _top/_bottom/ or _left/_right or
  * _width/_height postfix, and should be used to replace the originals whenever possible.
  * If you're able to replace an original, replace all occurrences, and delete the define. */
-
 
 /* User badge */
 #define SIDEBAR_PADDING 6
@@ -158,7 +151,6 @@ double ui_scale;
 #define ROSTER_BOX_HEIGHT 50
 #define ROSTER_AVATAR_TOP 5
 #define ROSTER_AVATAR_LEFT 10
-
 #define ROSTER_NAME_TOP 12
 
 /* Sidebar Lower search box and setting button */
@@ -181,17 +173,13 @@ double ui_scale;
 #define SCROLL_WIDTH 8 // must be divisible by 2
 #define FILE_TRANSFER_BOX_HEIGHT 28
 
-
 /* Main panel defines */
 #define MAIN_TOP 60
 
 /* Legacy defines, instead of using these, you should replace them with something more descriptive */
-#define LIST_Y2 86
-#define LIST_BUTTON_Y -26
 #define MESSAGES_SPACING 4
 #define MESSAGES_X 110
 #define TIME_WIDTH 45
-#define ACTUAL_TIME_WIDTH 32
 #define NAME_OFFSET 14
 
 #endif
