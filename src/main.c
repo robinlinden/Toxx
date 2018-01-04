@@ -9,8 +9,16 @@
 
 #include "av/utox_av.h"
 
+#include <tox/tox.h>
+
 #include <stdlib.h>
 #include <string.h>
+
+#if TOX_VERSION_IS_API_COMPATIBLE(0, 2, 0)
+// YAY!!
+#else
+  #error "Unable to compile uToxx with this Toxcore version. uToxx expects v0.2.*!"
+#endif
 
 /* The utox_ functions contained in src/main.c are wrappers for the platform native_ functions
  * if you need to localize them to a specific platform, move them from here, to each

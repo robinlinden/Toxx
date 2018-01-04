@@ -1,17 +1,9 @@
 #ifndef UTOX_MAIN_H
 #define UTOX_MAIN_H
 
-#include "branding.h"
-
-#include <tox/tox.h>
-
+#include <stdbool.h>
 #include <stddef.h>
-
-#if TOX_VERSION_IS_API_COMPATIBLE(0, 2, 0)
-// YAY!!
-#else
-  #error "Unable to compile uToxx with this Toxcore version. uToxx expects v0.2.*!"
-#endif
+#include <stdint.h>
 
 /* Support for large files. */
 #define _LARGEFILE_SOURCE

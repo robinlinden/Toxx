@@ -7,6 +7,7 @@
 #include "window.h"
 
 #include "../avatar.h"
+#include "../branding.h"
 #include "../filesys.h"
 #include "../flist.h"
 #include "../friend.h"

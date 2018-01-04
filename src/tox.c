@@ -1,6 +1,7 @@
 #include "tox.h"
 
 #include "avatar.h"
+#include "branding.h"
 #include "file_transfers.h"
 #include "flist.h"
 #include "friend.h"
