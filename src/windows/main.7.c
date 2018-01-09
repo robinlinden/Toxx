@@ -10,7 +10,6 @@
 #include "../file_transfers.h"
 #include "../filesys.h"
 #include "../friend.h"
-#include "../main.h"
 #include "../settings.h"
 #include "../tox.h"
 

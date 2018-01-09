@@ -7,7 +7,6 @@
 #include "../flist.h"
 #include "../friend.h"
 #include "../macros.h"
-#include "../main.h" // main_width
 #include "../self.h"
 #include "../settings.h"
 #include "../theme.h"

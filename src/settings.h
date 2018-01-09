@@ -9,6 +9,9 @@
 
 extern uint16_t loaded_audio_in_device, loaded_audio_out_device;
 
+#define MAIN_WIDTH 750
+#define MAIN_HEIGHT 500
+
 typedef struct utox_settings {
     // uTox versions settings
     uint32_t last_version;
@@ -115,6 +118,11 @@ typedef struct utox_save {
 
     uint8_t proxy_ip[];
 } UTOX_SAVE;
+
+/**
+ * Parses the arguments passed to uTox and dumps them into the settings struct.
+ */
+void parse_args(int argc, char *argv[]);
 
 /*
  * Loads the config file and returns a settings struct

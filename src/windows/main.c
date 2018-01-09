@@ -6,13 +6,14 @@
 #include "window.h"
 
 #include "../avatar.h"
+#include "../branding.h"
 #include "../commands.h"
 #include "../file_transfers.h"
 #include "../filesys.h"
 #include "../flist.h"
 #include "../friend.h"
 #include "../macros.h"
-#include "../main.h" // Lots of things. :(
+#include "../main.h" // utox_init
 #include "../self.h"
 #include "../settings.h"
 #include "../stb.h"
@@ -665,8 +666,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE UNUSED(hPrevInstance), PSTR cm
         return -5;
     }
 
-    int8_t should_launch_at_startup, set_show_window;
-    parse_args(argc, argv, &should_launch_at_startup, &set_show_window);
+    parse_args(argc, argv);
     GlobalFree(argv);
 
     if (settings.portable_mode == true) {
@@ -683,18 +683,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE UNUSED(hPrevInstance), PSTR cm
         strcpy(portable_mode_save_path, path);
     }
 
-    // We call utox_init after parse_args()
     utox_init();
 
     /* if opened with argument, check if uTox is already open and pass the argument to the existing process */
     HANDLE utox_mutex;
     win_init_mutex(&utox_mutex, hInstance, cmd);
-
-    if (should_launch_at_startup == 1) {
-        launch_at_startup(1);
-    } else if (should_launch_at_startup == -1) {
-        launch_at_startup(0);
-    }
 
     cursors_init();
 
@@ -742,15 +735,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE UNUSED(hPrevInstance), PSTR cm
 
     redraw();
     update_tray();
-
-    /* From --set flag */
-    if (set_show_window) {
-        if (set_show_window == 1) {
-            settings.start_in_tray = false;
-        } else if (set_show_window == -1) {
-            settings.start_in_tray = true;
-        }
-    }
 
     if (settings.start_in_tray) {
         ShowWindow(main_window.window, SW_HIDE);

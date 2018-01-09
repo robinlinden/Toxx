@@ -9,7 +9,6 @@
 
 #include "av/utox_av.h"
 
-#include <getopt.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -83,131 +82,9 @@ bool utox_data_save_ftinfo(char hex[TOX_PUBLIC_KEY_SIZE * 2], uint8_t *data, siz
     return true;
 }
 
-/* Shared function between all four platforms */
-void parse_args(int argc, char *argv[],
-                int8_t *should_launch_at_startup,
-                int8_t *set_show_window)
-{
-    // set default options
-    if (should_launch_at_startup) {
-        *should_launch_at_startup = 0;
-    }
-
-    if (set_show_window) {
-        *set_show_window = 0;
-    }
-
-    static struct option long_options[] = {
-        { "theme", required_argument, NULL, 't' },
-        { "portable", no_argument, NULL, 'p' },
-        { "set", required_argument, NULL, 's' },
-        { "unset", required_argument, NULL, 'u' },
-        { "version", no_argument, NULL, 0 },
-        { "silent", no_argument, NULL, 'S' },
-        { "verbose", no_argument, NULL, 'v' },
-        { "help", no_argument, NULL, 'h' },
-        { "debug", required_argument, NULL, 1 },
-        { 0, 0, 0, 0 }
-    };
-
-    int opt, long_index = 0;
-    while ((opt = getopt_long(argc, argv, "t:ps:u:nvh", long_options, &long_index)) != -1) {
-        // loop through each option; ":" after each option means an argument is required
-        switch (opt) {
-            case 't': {
-                if (!strcmp(optarg, "default")) {
-                    settings.theme = THEME_DEFAULT;
-                } else if (!strcmp(optarg, "dark")) {
-                    settings.theme = THEME_DARK;
-                } else if (!strcmp(optarg, "light")) {
-                    settings.theme = THEME_LIGHT;
-                } else if (!strcmp(optarg, "highcontrast")) {
-                    settings.theme = THEME_HIGHCONTRAST;
-                } else if (!strcmp(optarg, "zenburn")) {
-                    settings.theme = THEME_ZENBURN;
-                } else if (!strcmp(optarg, "solarized-light")) {
-                    settings.theme = THEME_SOLARIZED_LIGHT;
-                } else if (!strcmp(optarg, "solarized-dark")) {
-                    settings.theme = THEME_SOLARIZED_DARK;
-                } else {
-                    exit(EXIT_FAILURE);
-                }
-                break;
-            }
-
-            case 'p': {
-                settings.portable_mode = 1;
-                break;
-            }
-
-            case 's': {
-                if (!strcmp(optarg, "start-on-boot")) {
-                    if (should_launch_at_startup) {
-                        *should_launch_at_startup = 1;
-                    }
-                } else if (!strcmp(optarg, "show-window")) {
-                    if (set_show_window) {
-                        *set_show_window = 1;
-                    }
-                } else if (!strcmp(optarg, "hide-window")) {
-                    if (set_show_window) {
-                        *set_show_window = -1;
-                    }
-                } else {
-                    exit(EXIT_FAILURE);
-                }
-                break;
-            }
-
-            case 'u': {
-                if (!strcmp(optarg, "start-on-boot")) {
-                    if (should_launch_at_startup) {
-                        *should_launch_at_startup = -1;
-                    }
-                } else {
-                    exit(EXIT_FAILURE);
-                }
-                break;
-            }
-
-            case 0: {
-                exit(EXIT_SUCCESS);
-                break;
-            }
-
-            case 'S': {
-                break;
-            }
-
-            case 'v': {
-                break;
-            }
-
-            case 1: {
-                break;
-            }
-
-            case 'h': {
-                break;
-            }
-
-            case '?':{
-                break;
-            }
-        }
-    }
-}
-
-/** Does all of the init work for uTox across all platforms
- *
- * it's expected this will be called AFTER you parse argc/v and will act accordingly. */
 void utox_init(void) {
-    atexit(utox_raze);
-
     UTOX_SAVE *save = config_load();
     free(save);
 
     thread(utox_av_ctrl_thread, NULL);
 }
-
-void utox_raze(void) {}

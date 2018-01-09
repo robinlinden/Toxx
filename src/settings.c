@@ -1,8 +1,8 @@
 #include "settings.h"
 
+#include "branding.h"
 #include "flist.h"
 #include "groups.h"
-#include "main.h" // UTOX_VERSION_NUMBER, MAIN_HEIGHT, MAIN_WIDTH, all save things..
 #include "tox.h"
 
 #include "layout/settings.h"
@@ -14,6 +14,7 @@
 #include "ui/edit.h"
 #include "ui/switch.h"
 
+#include <getopt.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -74,6 +75,22 @@ SETTINGS settings = {
 
     .window_maximized     = 0,
 };
+
+void parse_args(int argc, char *argv[]) {
+    static struct option long_options[] = {
+        { "portable", no_argument, NULL, 'p' },
+        { 0, 0, 0, 0 }
+    };
+
+    int opt, long_index = 0;
+    while ((opt = getopt_long(argc, argv, "p", long_options, &long_index)) != -1) {
+        switch (opt) {
+        case 'p':
+            settings.portable_mode = true;
+            break;
+        }
+    }
+}
 
 // TODO refactor to match same order in main.h
 UTOX_SAVE *config_load(void) {

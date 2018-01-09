@@ -3,8 +3,8 @@
 #include "main.h"
 
 #include "../branding.h"
+#include "../settings.h"
 #include "../macros.h"
-#include "../main.h" // MAIN_WIDTH, MAIN_HEIGHT
 
 #include "../layout/background.h"
 #include "../layout/notify.h"

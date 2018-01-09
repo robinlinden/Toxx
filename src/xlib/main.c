@@ -11,7 +11,7 @@
 #include "../flist.h"
 #include "../friend.h"
 #include "../macros.h"
-#include "../main.h" // MAIN_WIDTH, MAIN_WIDTH, DEFAULT_SCALE, parse_args, utox_init
+#include "../main.h" // utox_init
 #include "../settings.h"
 #include "../stb.h"
 #include "../text.h"
@@ -629,11 +629,7 @@ int main(int argc, char *argv[]) {
     }
     initfonts();
 
-    int8_t should_launch_at_startup;
-    int8_t set_show_window;
-    parse_args(argc, argv,
-               &should_launch_at_startup,
-               &set_show_window);
+    parse_args(argc, argv);
 
     // We need to parse_args before calling utox_init()
     utox_init();
@@ -697,14 +693,6 @@ int main(int argc, char *argv[]) {
 
     XRenderColor xrcolor = { 0,0,0,0 };
     main_window.colorpic = XRenderCreateSolidFill(display, &xrcolor);
-
-    if (set_show_window) {
-        if (set_show_window == 1) {
-            settings.start_in_tray = 0;
-        } else if (set_show_window == -1) {
-            settings.start_in_tray = 1;
-        }
-    }
 
     /* make the window visible */
     if (settings.start_in_tray) {
