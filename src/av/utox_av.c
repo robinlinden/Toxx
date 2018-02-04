@@ -168,7 +168,8 @@ void utox_av_ctrl_thread(void *UNUSED(args)) {
                         utox_video_start(1);
                     } else {
                         utox_video_start(0);
-                        toxav_bit_rate_set(av, msg->param1, UTOX_DEFAULT_BITRATE_V, 0, NULL);
+                        toxav_audio_set_bit_rate(av, msg->param1, UTOX_DEFAULT_BITRATE_A, NULL);
+                        toxav_video_set_bit_rate(av, msg->param1, 0, NULL);
                     }
                     break;
                 }
@@ -178,7 +179,7 @@ void utox_av_ctrl_thread(void *UNUSED(args)) {
                         utox_video_stop(1);
                     } else {
                         utox_video_stop(0);
-                        toxav_bit_rate_set(av, msg->param1, -1, 0, NULL);
+                        toxav_video_set_bit_rate(av, msg->param1, 0, NULL);
                     }
                     postmessage_utox(AV_CLOSE_WINDOW, msg->param1, 0, NULL);
                     break;
@@ -307,14 +308,14 @@ void utox_av_local_call_control(ToxAV *av, uint32_t friend_number, TOXAV_CALL_CO
 
     switch (control) {
         case TOXAV_CALL_CONTROL_HIDE_VIDEO: {
-            toxav_bit_rate_set(av, friend_number, -1, 0, NULL);
+            toxav_video_set_bit_rate(av, friend_number, 0, NULL);
             postmessage_utoxav(UTOXAV_STOP_VIDEO, friend_number, 0, NULL);
             f->call_state_self &= (0xFF ^ TOXAV_FRIEND_CALL_STATE_SENDING_V);
             break;
         }
 
         case TOXAV_CALL_CONTROL_SHOW_VIDEO: {
-            toxav_bit_rate_set(av, friend_number, -1, UTOX_DEFAULT_BITRATE_V, NULL);
+            toxav_video_set_bit_rate(av, friend_number, UTOX_DEFAULT_BITRATE_V, NULL);
             postmessage_utoxav(UTOXAV_START_VIDEO, friend_number, 0, NULL);
             f->call_state_self |= TOXAV_FRIEND_CALL_STATE_SENDING_V;
             break;
@@ -391,7 +392,8 @@ static void utox_callback_av_change_state(ToxAV *av, uint32_t friend_number, uin
 
     if (state == 2) {
         utox_av_remote_disconnect(av, friend_number);
-        message_add_type_notice(&f->msg, "Friend Has Ended the call!", 26, 0); /* TODO localization with S() SLEN() */
+        // TODO: localization with S() SLEN()
+        message_add_type_notice(&f->msg, "Friend Has Ended the call!", 26, 0);
         return;
     }
 
@@ -408,12 +410,14 @@ static void utox_callback_av_change_state(ToxAV *av, uint32_t friend_number, uin
     get_friend(friend_number)->call_state_friend = state;
 }
 
-static void utox_incoming_rate_change(ToxAV *AV, uint32_t f_num, uint32_t UNUSED(a_bitrate),
-                                      uint32_t v_bitrate, void *UNUSED(ud))
+static void utox_callback_video_bit_rate(ToxAV *AV, uint32_t f_num,
+                                         uint32_t v_bitrate, void *UNUSED(userdata))
 {
-    /* Just accept what toxav wants the bitrate to be... */
+    // TODO: Maybe it's better to turn video off before audio suffers instead of
+    // having a minimum bitrate?
+    // Just accept what toxav wants the bitrate to be...
     if (v_bitrate > (uint32_t)UTOX_MIN_BITRATE_VIDEO) {
-        toxav_bit_rate_set(AV, f_num, -1, v_bitrate, NULL);
+        toxav_video_set_bit_rate(AV, f_num, v_bitrate, NULL);
     }
 }
 
@@ -427,5 +431,5 @@ void set_av_callbacks(ToxAV *av) {
     toxav_callback_video_receive_frame(av, &utox_av_incoming_frame_v, NULL);
 
     /* Data type change callbacks. */
-    toxav_callback_bit_rate_status(av, &utox_incoming_rate_change, NULL);
+    toxav_callback_video_bit_rate(av, &utox_callback_video_bit_rate, NULL);
 }
