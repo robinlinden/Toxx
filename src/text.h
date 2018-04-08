@@ -18,7 +18,7 @@ uint8_t utf8_len(const char *data);
 /* read the character into ch */
 uint8_t utf8_len_read(const char *data, uint32_t *ch);
 /* backwards length */
-uint8_t utf8_unlen(char *data);
+uint8_t utf8_unlen(const char *data);
 
 /* remove invalid characters from utf8 string
  * returns the new length after invalid characters have been removed
@@ -35,11 +35,7 @@ void unicode_to_utf8(uint32_t ch, char *dst);
  */
 bool memcmp_case(const char *s1, const char *s2, uint32_t n);
 
-/* replace html entities (<,>,&) with html
- */
-char *tohtml(const char *str, uint16_t len);
-
-void to_hex(char *out, uint8_t *in, int size);
+void to_hex(char *out, const uint8_t *in, uint16_t size);
 
 /* returns non-zero if substring is found */
 bool strstr_case(const char *a, const char *b);

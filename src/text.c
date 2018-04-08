@@ -18,9 +18,7 @@ int sprint_humanread_bytes(char *dest, unsigned int size, uint64_t bytes) {
         i++;
     }
 
-    size_t r;
-
-    r = snprintf((char *)dest, size, "%u", (uint32_t)bytes);
+    size_t r = snprintf((char *)dest, size, "%u", (uint32_t)bytes);
 
     if (r >= size) { // truncated
         r = size - 1;
@@ -40,8 +38,8 @@ uint8_t utf8_len(const char *data) {
         return 1;
     }
 
-    uint8_t bytes = 1, i;
-    for (i = 6; i != 0xFF; i--) {
+    uint8_t bytes = 1;
+    for (uint8_t i = 6; i != 0xFF; i--) {
         if (!((*data >> i) & 1)) {
             break;
         }
@@ -89,7 +87,7 @@ uint8_t utf8_len_read(const char *data, uint32_t *ch) {
     return 0;
 }
 
-uint8_t utf8_unlen(char *data) {
+uint8_t utf8_unlen(const char *data) {
     uint8_t len = 1;
     if (*(data - 1) & 0x80) {
         do {
@@ -115,8 +113,8 @@ int utf8_validate(const uint8_t *data, int len) {
             continue;
         }
 
-        uint8_t bytes = 1, i;
-        for (i = 6; i != 0xFF; i--) {
+        uint8_t bytes = 1;
+        for (uint8_t i = 6; i != 0xFF; i--) {
             if (!((*a >> i) & 1)) {
                 break;
             }
@@ -132,7 +130,7 @@ int utf8_validate(const uint8_t *data, int len) {
             break;
         }
 
-        for (i = 1; i < bytes; i++) {
+        for (uint8_t i = 1; i < bytes; i++) {
             if (!(a[i] & 0x80) || (a[i] & 0x40)) {
                 return a - data;
             }
@@ -180,9 +178,7 @@ void unicode_to_utf8(uint32_t ch, char *dst) {
 }
 
 bool memcmp_case(const char *s1, const char *s2, uint32_t n) {
-    uint32_t i;
-
-    for (i = 0; i < n; i++) {
+    for (uint32_t i = 0; i < n; i++) {
         char c1, c2;
 
         c1 = s1[i];
@@ -204,62 +200,7 @@ bool memcmp_case(const char *s1, const char *s2, uint32_t n) {
     return 0;
 }
 
-char *tohtml(const char *str, uint16_t length) {
-    uint16_t i   = 0;
-    int      len = 0;
-    while (i != length) {
-        switch (str[i]) {
-            case '<':
-            case '>': {
-                len += 3;
-                break;
-            }
-
-            case '&': {
-                len += 4;
-                break;
-            }
-        }
-
-        i += utf8_len(str + i);
-    }
-
-    char *out = malloc(length + len + 1);
-    i         = 0;
-    len       = 0;
-    while (i != length) {
-        switch (str[i]) {
-            case '<':
-            case '>': {
-                memcpy(out + len, str[i] == '>' ? "&gt;" : "&lt;", 4);
-                len += 4;
-                i++;
-                break;
-            }
-
-            case '&': {
-                memcpy(out + len, "&amp;", 5);
-                len += 5;
-                i++;
-                break;
-            }
-
-            default: {
-                uint16_t r = utf8_len(str + i);
-                memcpy(out + len, str + i, r);
-                len += r;
-                i += r;
-                break;
-            }
-        }
-    }
-
-    out[len] = 0;
-
-    return out;
-}
-
-void to_hex(char *out, uint8_t *in, int size) {
+void to_hex(char *out, const uint8_t *in, uint16_t size) {
     while (size--) {
         if (*in >> 4 < 0xA) {
             *out++ = '0' + (*in >> 4);

@@ -44,6 +44,63 @@ bool hidden = false;
 XIC xic = NULL;
 static XSizeHints *xsh = NULL;
 
+
+// Replace html entities (<,>,&) with HTML.
+static char *tohtml(const char *str, uint16_t length) {
+    uint16_t i   = 0;
+    int      len = 0;
+    while (i != length) {
+        switch (str[i]) {
+            case '<':
+            case '>': {
+                len += 3;
+                break;
+            }
+
+            case '&': {
+                len += 4;
+                break;
+            }
+        }
+
+        i += utf8_len(str + i);
+    }
+
+    char *out = malloc(length + len + 1);
+    i         = 0;
+    len       = 0;
+    while (i != length) {
+        switch (str[i]) {
+            case '<':
+            case '>': {
+                memcpy(out + len, str[i] == '>' ? "&gt;" : "&lt;", 4);
+                len += 4;
+                i++;
+                break;
+            }
+
+            case '&': {
+                memcpy(out + len, "&amp;", 5);
+                len += 5;
+                i++;
+                break;
+            }
+
+            default: {
+                uint16_t r = utf8_len(str + i);
+                memcpy(out + len, str + i, r);
+                len += r;
+                i += r;
+                break;
+            }
+        }
+    }
+
+    out[len] = 0;
+
+    return out;
+}
+
 void setclipboard(void) {
     XSetSelectionOwner(display, XA_CLIPBOARD, main_window.window, CurrentTime);
 }
