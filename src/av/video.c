@@ -197,6 +197,7 @@ bool utox_video_stop(bool UNUSED(preview)) {
 }
 
 static TOX_MSG video_msg;
+static bool video_thread_msg = false;
 void postmessage_video(uint8_t msg, uint32_t param1, uint32_t param2, void *data) {
     while (video_thread_msg) {
         yieldcpu(1);

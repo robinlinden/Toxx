@@ -36,7 +36,17 @@
 
 #include "main.h" // utox_data_save/load, DEFAULT_NAME, DEFAULT_STATUS
 
+typedef enum UTOX_ENC_ERR {
+    UTOX_ENC_ERR_NONE,
+    UTOX_ENC_ERR_LENGTH,
+    UTOX_ENC_ERR_BAD_PASS,
+    UTOX_ENC_ERR_BAD_DATA,
+    UTOX_ENC_ERR_UNKNOWN
+} UTOX_ENC_ERR;
+
 static bool save_needed = true;
+static bool tox_thread_msg = false;
+static TOX_MSG tox_msg;
 
 static void tox_thread_message(Tox *tox, ToxAV *av, uint64_t time, uint8_t msg, uint32_t param1,
                                uint32_t param2, void *data);
@@ -56,7 +66,7 @@ void postmessage_toxcore(uint8_t msg, uint32_t param1, uint32_t param2, void *da
     tox_msg.param2 = param2;
     tox_msg.data   = data;
 
-    tox_thread_msg = 1;
+    tox_thread_msg = true;
 }
 
 static int utox_encrypt_data(void *clear_text, size_t clear_length, uint8_t *cypher_data) {
@@ -80,7 +90,11 @@ static int utox_encrypt_data(void *clear_text, size_t clear_length, uint8_t *cyp
     return 0;
 }
 
-static int utox_decrypt_data(void *cypher_data, size_t cypher_length, uint8_t *clear_text) {
+static UTOX_ENC_ERR utox_decrypt_data(
+        const uint8_t *cypher_data,
+        size_t cypher_length,
+        uint8_t *clear_text)
+{
     size_t passphrase_length = edit_profile_password.length;
 
     if (passphrase_length < 4) {
@@ -89,12 +103,12 @@ static int utox_decrypt_data(void *cypher_data, size_t cypher_length, uint8_t *c
 
     uint8_t passphrase[passphrase_length];
     memcpy(passphrase, edit_profile_password.data, passphrase_length);
-    TOX_ERR_DECRYPTION err = 0;
-    tox_pass_decrypt((uint8_t *)cypher_data, cypher_length, (uint8_t *)passphrase, passphrase_length, clear_text, &err);
+    TOX_ERR_DECRYPTION err = TOX_ERR_DECRYPTION_FAILED;
+    tox_pass_decrypt(cypher_data, cypher_length, passphrase, passphrase_length, clear_text, &err);
 
     switch (err) {
         case TOX_ERR_DECRYPTION_OK: {
-            return 0;
+            return UTOX_ENC_ERR_NONE;
         }
         case TOX_ERR_DECRYPTION_NULL:
         case TOX_ERR_DECRYPTION_INVALID_LENGTH: {
@@ -111,7 +125,7 @@ static int utox_decrypt_data(void *cypher_data, size_t cypher_length, uint8_t *c
         }
     }
 
-    return -1;
+    return UTOX_ENC_ERR_UNKNOWN;
 }
 
 /* bootstrap to dht with bootstrap_nodes */
@@ -122,8 +136,7 @@ static void toxcore_bootstrap(Tox *tox, bool ipv6_enabled) {
         j = rand();
     }
 
-    int i = 0;
-    while (i < 4) {
+    for (uint8_t i = 0; i < 4; ++i) {
         struct bootstrap_node *d = &bootstrap_nodes[j++ % COUNTOF(bootstrap_nodes)];
         // do not add IPv6 bootstrap nodes if IPv6 is not enabled
         if (!ipv6_enabled && d->ipv6) {
@@ -132,7 +145,6 @@ static void toxcore_bootstrap(Tox *tox, bool ipv6_enabled) {
 
         tox_bootstrap(tox, d->address, d->port_udp, d->key, 0);
         tox_add_tcp_relay(tox, d->address, d->port_tcp, d->key, 0);
-        i++;
     }
 }
 
@@ -233,39 +245,49 @@ static void utox_thread_work_for_typing_notifications(Tox *tox, uint64_t time) {
 }
 
 static int load_toxcore_save(struct Tox_Options *options) {
-    settings.save_encryption = 0;
-    size_t   raw_length;
+    settings.save_encryption = false;
+    size_t raw_length = 0;
     uint8_t *raw_data = utox_data_load_tox(&raw_length);
 
-    /* Check if we're loading a saved profile */
-    if (raw_data && raw_length) {
-        if (tox_is_data_encrypted(raw_data)) {
-            size_t   cleartext_length = raw_length - TOX_PASS_ENCRYPTION_EXTRA_LENGTH;
-            uint8_t *clear_data       = calloc(1, cleartext_length);
-            settings.save_encryption   = 1;
-
-            UTOX_ENC_ERR decrypt_err = utox_decrypt_data(raw_data, raw_length, clear_data);
-            if (decrypt_err) {
-                return -1;
-            }
-
-            if (clear_data && cleartext_length) {
-                options->savedata_type   = TOX_SAVEDATA_TYPE_TOX_SAVE;
-                options->savedata_data   = clear_data;
-                options->savedata_length = cleartext_length;
-
-                return 0;
-            }
-        } else {
-            options->savedata_type   = TOX_SAVEDATA_TYPE_TOX_SAVE;
-            options->savedata_data   = raw_data;
-            options->savedata_length = raw_length;
-
-            return 0;
-        }
+    if (!raw_data || !raw_length) {
+        /* No save file at all, create new profile! */
+        return -2;
     }
-    /* No save file at all, create new profile! */
-    return -2;
+
+    if (!tox_is_data_encrypted(raw_data)) {
+        options->savedata_type = TOX_SAVEDATA_TYPE_TOX_SAVE;
+        options->savedata_data = raw_data;
+        options->savedata_length = raw_length;
+
+        return 0;
+    }
+
+    size_t cleartext_length = raw_length - TOX_PASS_ENCRYPTION_EXTRA_LENGTH;
+    if (cleartext_length == 0) {
+        free(raw_data);
+        return -1;
+    }
+
+    uint8_t *clear_data = calloc(1, cleartext_length);
+    if (!clear_data) {
+        free(raw_data);
+        return -1;
+    }
+
+    UTOX_ENC_ERR decrypt_err = utox_decrypt_data(raw_data, raw_length, clear_data);
+    free(raw_data);
+
+    if (decrypt_err != UTOX_ENC_ERR_NONE) {
+        free(clear_data);
+        return -1;
+    }
+
+    settings.save_encryption = true;
+    options->savedata_type = TOX_SAVEDATA_TYPE_TOX_SAVE;
+    options->savedata_data = clear_data;
+    options->savedata_length = cleartext_length;
+
+    return 0;
 }
 
 static void log_callback(Tox *UNUSED(tox), TOX_LOG_LEVEL UNUSED(level), const char *UNUSED(file),
@@ -280,7 +302,6 @@ static void log_callback(Tox *UNUSED(tox), TOX_LOG_LEVEL UNUSED(level), const ch
 // returns -2 on fatal error
 static int init_toxcore(Tox **tox) {
     tox_thread_init = UTOX_TOX_THREAD_INIT_NONE;
-    int save_status = 0;
 
     struct Tox_Options topt;
     tox_options_default(&topt);
@@ -296,7 +317,7 @@ static int init_toxcore(Tox **tox) {
     tox_options_set_proxy_host(&topt, proxy_address);
     tox_options_set_proxy_port(&topt, settings.proxy_port);
 
-    save_status = load_toxcore_save(&topt);
+    int save_status = load_toxcore_save(&topt);
 
     // TODO tox.c shouldn't be interacting with the UI on this level
     if (save_status == -1) {
@@ -403,7 +424,7 @@ void toxcore_thread(void *UNUSED(args)) {
                         tox_thread_init = UTOX_TOX_THREAD_INIT_NONE;
                     }
                     // tox is not configured at this point ignore all other messages
-                    tox_thread_msg = 0;
+                    tox_thread_msg = false;
                 } else {
                     yieldcpu(300);
                 }
@@ -414,7 +435,7 @@ void toxcore_thread(void *UNUSED(args)) {
             yieldcpu(300);
             tox_thread_init = UTOX_TOX_THREAD_INIT_NONE;
             // ignore all messages in this stage
-            tox_thread_msg = 0;
+            tox_thread_msg = false;
             reconfig = 1;
             continue;
         } else {
@@ -465,13 +486,13 @@ void toxcore_thread(void *UNUSED(args)) {
                 TOX_MSG *msg = &tox_msg;
                 // If msg->msg is 0, reconfig if needed and break from tox_do
                 if (!msg->msg) {
-                    reconfig        = msg->param1;
-                    tox_thread_msg  = 0;
+                    reconfig = msg->param1;
+                    tox_thread_msg = false;
                     tox_thread_init = UTOX_TOX_THREAD_INIT_NONE;
                     break;
                 }
                 tox_thread_message(tox, av, time, msg->msg, msg->param1, msg->param2, msg->data);
-                tox_thread_msg = 0;
+                tox_thread_msg = false;
                 typing_state.sent = (msg->msg == TOX_SEND_MESSAGE || msg->msg == TOX_SEND_ACTION);
             }
 
@@ -511,31 +532,34 @@ static void tox_thread_message(Tox *tox, ToxAV *av, uint64_t time, uint8_t msg, 
 {
     switch (msg) {
         case TOX_SAVE: {
-            save_needed = 1;
+            save_needed = true;
             break;
         }
+
         /* Change Self in core */
         case TOX_SELF_SET_NAME: {
             /* param1: name length
              * data: name
              */
             tox_self_set_name(tox, data, param1, 0);
-            save_needed = 1;
+            save_needed = true;
             break;
         }
+
         case TOX_SELF_SET_STATUS: {
             /* param1: status length
              * data: status message
              */
             tox_self_set_status_message(tox, data, param1, 0);
-            save_needed = 1;
+            save_needed = true;
             break;
         }
+
         case TOX_SELF_SET_STATE: {
             /* param1: status
              */
             tox_self_set_status(tox, param1);
-            save_needed = 1;
+            save_needed = true;
             break;
         }
 
@@ -569,12 +593,13 @@ static void tox_thread_message(Tox *tox, ToxAV *av, uint64_t time, uint8_t msg, 
              */
 
             avatar_set_self(data, param2);
-            save_needed = 1;
+            save_needed = true;
             break;
         }
+
         case TOX_AVATAR_UNSET: {
             avatar_unset_self();
-            save_needed = 1;
+            save_needed = true;
             break;
         }
 
@@ -611,7 +636,7 @@ static void tox_thread_message(Tox *tox, ToxAV *av, uint64_t time, uint8_t msg, 
                 utox_friend_init(tox, fid);
                 postmessage_utox(FRIEND_SEND_REQUEST, 0, fid, data);
             }
-            save_needed = 1;
+            save_needed = true;
             break;
         }
 
@@ -628,19 +653,16 @@ static void tox_thread_message(Tox *tox, ToxAV *av, uint64_t time, uint8_t msg, 
                 char hex_id[TOX_ADDRESS_SIZE * 2];
                 id_to_string(hex_id, req->bin_id);
             }
-            save_needed = 1;
+            save_needed = true;
             break;
         }
+
         case TOX_FRIEND_DELETE: {
             /* param1: friend #
              */
             tox_friend_delete(tox, param1, 0);
             postmessage_utox(FRIEND_REMOVE, 0, 0, data);
-            save_needed = 1;
-            break;
-        }
-        case TOX_FRIEND_ONLINE: {
-            /* Moved to the call back... */
+            save_needed = true;
             break;
         }
 
@@ -674,6 +696,7 @@ static void tox_thread_message(Tox *tox, ToxAV *av, uint64_t time, uint8_t msg, 
 
             break;
         }
+
         case TOX_SEND_TYPING: {
             /* param1: friend #
              */
@@ -824,10 +847,6 @@ static void tox_thread_message(Tox *tox, ToxAV *av, uint64_t time, uint8_t msg, 
             }
             break;
         }
-        case TOX_CALL_INCOMING: {
-            /* This is a call back, todo remove */
-            break;
-        }
         case TOX_CALL_ANSWER: {
             /* param1: Friend_number #
              * param2: Accept Video? #
@@ -875,24 +894,11 @@ static void tox_thread_message(Tox *tox, ToxAV *av, uint64_t time, uint8_t msg, 
             utox_av_local_disconnect(av, param1);
             break;
         }
-
-        /* Groups are broken while we await the new GCs getting merged. */
-        /*
-        TOX_GROUP_JOIN,
-        TOX_GROUP_PART, // 30
-        TOX_GROUP_INVITE,
-        TOX_GROUP_SET_TOPIC,
-        TOX_GROUP_SEND_MESSAGE,
-        TOX_GROUP_SEND_ACTION,
-        TOX_GROUP_AUDIO_START, // 35
-        TOX_GROUP_AUDIO_END,*/
-
         case TOX_GROUP_CREATE: {
             int g_num = -1;
 
             TOX_ERR_CONFERENCE_NEW error = 0;
             if (param2) {
-                // TODO FIX THIS AFTER NEW GROUP API
                 g_num = toxav_add_av_groupchat(tox, callback_av_group_audio, NULL);
             } else {
                 g_num = tox_conference_new(tox, &error);
@@ -925,9 +931,6 @@ static void tox_thread_message(Tox *tox, ToxAV *av, uint64_t time, uint8_t msg, 
             postmessage_utox(GROUP_PEER_ADD, g_num, 0, NULL);
 
             save_needed = true;
-            break;
-        }
-        case TOX_GROUP_JOIN: {
             break;
         }
         case TOX_GROUP_PART: {

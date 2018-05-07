@@ -22,14 +22,6 @@ typedef struct {
     void *   data;
 } TOX_MSG;
 
-typedef enum UTOX_ENC_ERR {
-    UTOX_ENC_ERR_NONE,
-    UTOX_ENC_ERR_LENGTH,
-    UTOX_ENC_ERR_BAD_PASS,
-    UTOX_ENC_ERR_BAD_DATA,
-    UTOX_ENC_ERR_UNKNOWN
-} UTOX_ENC_ERR;
-
 /* toxcore thread messages (sent from the client thread) */
 enum {
     /* SHUTDOWNEVERYTHING! */
@@ -50,7 +42,6 @@ enum {
     TOX_FRIEND_NEW,
     TOX_FRIEND_ACCEPT,
     TOX_FRIEND_DELETE,
-    TOX_FRIEND_ONLINE,
 
     /* Default actions */
     TOX_SEND_MESSAGE,
@@ -70,7 +61,6 @@ enum {
 
     /* Audio/Video Calls */
     TOX_CALL_SEND,
-    TOX_CALL_INCOMING,
     TOX_CALL_ANSWER,
     TOX_CALL_PAUSE_AUDIO,
     TOX_CALL_PAUSE_VIDEO,
@@ -79,7 +69,6 @@ enum {
     TOX_CALL_DISCONNECT,
 
     TOX_GROUP_CREATE,
-    TOX_GROUP_JOIN,
     TOX_GROUP_PART,
     TOX_GROUP_SEND_INVITE,
     TOX_GROUP_SET_TOPIC,
@@ -114,10 +103,6 @@ typedef enum {
 } UTOX_TOX_THREAD_INIT;
 
 UTOX_TOX_THREAD_INIT tox_thread_init;
-
-/* Inter-thread communication vars. */
-TOX_MSG       tox_msg, audio_msg, toxav_msg;
-volatile bool tox_thread_msg, audio_thread_msg, video_thread_msg;
 
 bool tox_connected;
 char proxy_address[256]; /* Magic Number inside toxcore */
