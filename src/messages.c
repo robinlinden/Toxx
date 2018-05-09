@@ -182,9 +182,11 @@ static uint32_t message_add(MESSAGES *m, MSG_HEADER *msg) {
 
     message_updateheight(m, msg);
 
-    if (flist_get_groupchat() && m->is_groupchat && flist_get_groupchat() == get_group(m->id)) {
-        m->panel.content_scroll->content_height = m->height;
-    } else if (flist_get_friend() && flist_get_friend()->number == get_friend(m->id)->number) {
+    if (m->is_groupchat) {
+        if (flist_get_groupchat() && flist_get_groupchat() == get_group(m->id)) {
+            m->panel.content_scroll->content_height = m->height;
+        }
+    } else if (flist_get_friend() && flist_get_friend() == get_friend(m->id)) {
         m->panel.content_scroll->content_height = m->height;
     }
 
