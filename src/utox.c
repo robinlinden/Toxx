@@ -564,7 +564,7 @@ void utox_message_dispatch(UTOX_MSG utox_msg_id, uint16_t param1, uint16_t param
             }
 
             if (g->av_group) {
-                g->last_recv_audio[param2]        = g->last_recv_audio[g->peer_count];
+                g->last_recv_audio[param2] = g->last_recv_audio[g->peer_count];
                 g->last_recv_audio[g->peer_count] = 0;
                 group_av_peer_remove(g, param2);
                 g->source[param2] = g->source[g->peer_count];
@@ -580,6 +580,10 @@ void utox_message_dispatch(UTOX_MSG utox_msg_id, uint16_t param1, uint16_t param
 
             break;
         }
+
+        // param1: group number
+        // param2: peer number
+        case GROUP_PEER_CHANGE:
         case GROUP_PEER_ADD:
         case GROUP_PEER_NAME: {
             GROUPCHAT *g = get_group(param1);
