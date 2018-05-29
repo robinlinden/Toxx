@@ -142,9 +142,8 @@ void utox_av_ctrl_thread(void *UNUSED(args)) {
                 }
 
                 case UTOXAV_START_AUDIO: {
-                    call_count++;
-                    if (msg->param1) {
-                        /* Start audio preview */
+                    const bool audio_preview = msg->param1;
+                    if (audio_preview) {
                         call_count++;
                         postmessage_audio(UTOXAUDIO_START_PREVIEW, 0, 0, NULL);
                     }
