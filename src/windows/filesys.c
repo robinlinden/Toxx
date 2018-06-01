@@ -4,6 +4,7 @@
 #include "../filesys.h"
 #include "../settings.h"
 
+#include <assert.h>
 #include <io.h>
 #include <stdio.h>
 #include <string.h>
@@ -29,6 +30,9 @@ static FILE* get_file(wchar_t path[UTOX_FILE_NAME_LENGTH], UTOX_FILE_OPTS opts) 
         rw |= GENERIC_WRITE;
         mode[0] = 'w';
         create = CREATE_ALWAYS;
+    } else {
+        assert(false);
+        return NULL;
     }
 
     mode[1] = 'b';
@@ -39,7 +43,12 @@ static FILE* get_file(wchar_t path[UTOX_FILE_NAME_LENGTH], UTOX_FILE_OPTS opts) 
     HANDLE WINAPI winFile = CreateFileW(path, rw, FILE_SHARE_READ, NULL,
                                         create, FILE_ATTRIBUTE_NORMAL, NULL);
 
-    return _fdopen(_open_osfhandle((intptr_t)winFile, 0), mode);
+    const int handle = _open_osfhandle((intptr_t)winFile, 0);
+    if (handle == -1) {
+        return NULL;
+    }
+
+    return _fdopen(handle, mode);
 }
 
 FILE *native_get_file_simple(const char *path, UTOX_FILE_OPTS opts) {
