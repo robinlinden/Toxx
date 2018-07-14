@@ -73,7 +73,6 @@ endif()
 option(UTOX_STATIC        "Link uTox statically"                                 ${STATIC_DEFAULT} )
 option(TOXCORE_STATIC     "Build uTox with the static version of Toxcore"        ${STATIC_DEFAULT} )
 option(ENABLE_ASAN        "Enable Address Sanitizer on debug builds"               ${ASAN_DEFAULT} )
-option(ENABLE_TESTS       "Whether to build test binaries (currently linux only)"               ON )
 option(ENABLE_WERROR      "Error on Warning, whether to put -Werror flag to the compiler"       OFF)
 option(ENABLE_FILTERAUDIO "Enable Filter Audio"                                                 ON )
 
@@ -298,20 +297,6 @@ if(UNIX)
         )
 endif()
 
-
-###########
-# Testing #
-###########
-
-if(ENABLE_TESTS)
-  if(UNIX)
-    # Tests currently only run on Linux.
-    enable_testing()
-    add_subdirectory(tests)
-  endif()
-endif()
-
-
 ##############
 # Build info #
 ##############
@@ -323,8 +308,6 @@ message("- Error on Warning:        ${ENABLE_WERROR}")
 message("- Filter Audio:            ${ENABLE_FILTERAUDIO}")
 message("- uTox Static:             ${UTOX_STATIC}")
 message("- Toxcore Static:          ${TOXCORE_STATIC}")
-message("-- Platform Options --------------")
-message("- Enable Tests             ${ENABLE_TESTS}")
 
 message("* CMake system is '${CMAKE_SYSTEM_NAME}'")
 message("* CMake build type is '${CMAKE_BUILD_TYPE}'")

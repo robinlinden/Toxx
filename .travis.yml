@@ -11,7 +11,6 @@ addons:
       - cmake
       - cmake-data
       - yasm
-      - check
       - libdbus-1-dev
       - libopenal-dev
       - libopenal-data

@@ -11,7 +11,6 @@ cmake .. -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchain-win64.cmake \
          -DCMAKE_INCLUDE_PATH="$CACHE_DIR/usr/include" \
          -DCMAKE_LIBRARY_PATH="$CACHE_DIR/usr/lib" \
          -DENABLE_FILTERAUDIO=OFF \
-         -DENABLE_TESTS=OFF \
          -DENABLE_WERROR=OFF \
          -DTOXCORE_STATIC=ON
 make -j`nproc`
