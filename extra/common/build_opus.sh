@@ -14,9 +14,4 @@ if ! [ -f "$CACHE_DIR/usr/lib/pkgconfig/opus.pc" ]; then
   make install
   cd ..
   rm -rf opus**
-else
-  echo "Have Opus"
-  ls -la "${CACHE_DIR}/usr/lib/"
-  ls -la "${CACHE_DIR}/usr/lib/pkgconfig/"
-  ls -la "${CACHE_DIR}/usr/include/"
 fi
