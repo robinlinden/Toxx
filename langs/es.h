@@ -325,9 +325,6 @@ msgstr("No se ha encontrado el archivo seleccionado, o el archivo está vacío."
 msgid(CLEAR_HISTORY)
 msgstr("Limpiar historial")
 
-msgid(AUTO_STARTUP)
-msgstr("Iniciar automáticamente cuando se encienda el ordenador")
-
 msgid(THEME)
 msgstr("Tema")
 

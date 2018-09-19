@@ -497,9 +497,6 @@ msgstr("Ausgewählte Datei existiert nicht oder ist leer.")
 msgid(CLEAR_HISTORY)
 msgstr("Chatverlauf leeren")
 
-msgid(AUTO_STARTUP)
-msgstr("Automatisch beim Systemstart starten")
-
 msgid(THEME)
 msgstr("Stil")
 

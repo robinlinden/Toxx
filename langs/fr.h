@@ -542,9 +542,6 @@ msgstr("Impossible de trouver le fichier sélectionné ou le fichier sélectionn
 msgid(CLEAR_HISTORY)
 msgstr("Nettoyer l'historique")
 
-msgid(AUTO_STARTUP)
-msgstr("Lancer au démarrage du système")
-
 msgid(THEME)
 msgstr("Thème")
 

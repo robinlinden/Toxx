@@ -626,9 +626,6 @@ msgstr("Вказаний файл не існує або порожній.")
 msgid(CLEAR_HISTORY)
 msgstr("Очистити історію")
 
-msgid(AUTO_STARTUP)
-msgstr("Запускати під час завантаження системи")
-
 msgid(THEME)
 msgstr("Тема")
 

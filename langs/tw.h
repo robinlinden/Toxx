@@ -478,9 +478,6 @@ msgstr("無法找到所選文件或所選文件為空。")
 msgid(CLEAR_HISTORY)
 msgstr("清空歷史")
 
-msgid(AUTO_STARTUP)
-msgstr("開機時自動啟動")
-
 msgid(THEME)
 msgstr("界面風格")
 

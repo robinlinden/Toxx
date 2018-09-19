@@ -642,9 +642,6 @@ msgstr("Kan ej hitta den markerade filen eller så är den tom.")
 msgid(CLEAR_HISTORY)
 msgstr("Rensa historik")
 
-msgid(AUTO_STARTUP)
-msgstr("Starta sammtidigt som datorn")
-
 msgid(THEME)
 msgstr("Tema")
 

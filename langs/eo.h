@@ -382,9 +382,6 @@ msgstr("Ne eblas trovi la elektitan dosieron aŭ la elektita dosiero estas malpl
 msgid(CLEAR_HISTORY)
 msgstr("Forviŝi historion")
 
-msgid(AUTO_STARTUP)
-msgstr("Lanĉi ĉe sistema startigo")
-
 msgid(THEME)
 msgstr("Temo")
 

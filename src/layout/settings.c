@@ -169,8 +169,7 @@ static void draw_settings_text_ui(int x, int y, int UNUSED(w), int UNUSED(height
     drawstr(x + SCALE(20) + BM_SWITCH_WIDTH,  y + SCALE(65),  SAVE_CHAT_HISTORY);
     drawstr(x + SCALE(20) + BM_SWITCH_WIDTH,  y + SCALE(95),  CLOSE_TO_TRAY);
     drawstr(x + SCALE(20) + BM_SWITCH_WIDTH,  y + SCALE(125), START_IN_TRAY);
-    drawstr(x + SCALE(20) + BM_SWITCH_WIDTH,  y + SCALE(155), AUTO_STARTUP);
-    drawstr(x + SCALE(20) + BM_SWITCH_WIDTH,  y + SCALE(185), SETTINGS_UI_MINI_ROSTER);
+    drawstr(x + SCALE(20) + BM_SWITCH_WIDTH,  y + SCALE(155), SETTINGS_UI_MINI_ROSTER);
 }
 
 // Audio/Video settings page
@@ -353,7 +352,6 @@ panel_settings_ui = {
         (PANEL*)&switch_save_chat_history,
         (PANEL*)&switch_close_to_tray,
         (PANEL*)&switch_start_in_tray,
-        (PANEL*)&switch_auto_startup,
         (PANEL*)&switch_mini_contacts,
         NULL
     }
@@ -764,11 +762,6 @@ static void switchfxn_start_in_tray(void) {
     settings.start_in_tray = !settings.start_in_tray;
 }
 
-static void switchfxn_auto_startup(void) {
-    settings.start_with_system = !settings.start_with_system;
-    launch_at_startup(settings.start_with_system);
-}
-
 static void switchfxn_typing_notes(void) {
     settings.send_typing_status = !settings.send_typing_status;
 }
@@ -873,16 +866,6 @@ UISWITCH switch_start_in_tray = {
     .update         = switch_update,
     .on_mup         = switchfxn_start_in_tray,
     .tooltip_text   = { .i18nal = STR_START_IN_TRAY },
-};
-
-UISWITCH switch_auto_startup = {
-    .style_outer    = BM_SWITCH,
-    .style_toggle   = BM_SWITCH_TOGGLE,
-    .style_icon_off = BM_NO,
-    .style_icon_on  = BM_YES,
-    .update         = switch_update,
-    .on_mup         = switchfxn_auto_startup,
-    .tooltip_text   = { .i18nal = STR_AUTO_STARTUP },
 };
 
 UISWITCH switch_typing_notes = {

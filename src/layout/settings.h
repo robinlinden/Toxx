@@ -40,7 +40,6 @@ extern UISWITCH /* User Interface Tab */
                 switch_save_chat_history,
                 switch_close_to_tray,
                 switch_start_in_tray,
-                switch_auto_startup,
                 switch_mini_contacts,
                 switch_magic_sidebar,
                 /* AV Tab */

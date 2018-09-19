@@ -118,28 +118,3 @@ void native_autoselect_dir_ft(uint32_t fid, FILE_TRANSFER *file) {
     native_to_utf8str(fullpath, path, UTOX_FILE_NAME_LENGTH);
     postmessage_toxcore(TOX_FILE_ACCEPT_AUTO, fid, file->file_number, path);
 }
-
-void launch_at_startup(bool should) {
-    const wchar_t *run_key_path = L"Software\\Microsoft\\Windows\\CurrentVersion\\Run";
-
-    if (should) {
-        HKEY hKey;
-        if (RegOpenKeyW(HKEY_CURRENT_USER, run_key_path, &hKey) == ERROR_SUCCESS) {
-            wchar_t path[UTOX_FILE_NAME_LENGTH * 2];
-            uint16_t path_length  = GetModuleFileNameW(NULL, path + 1, UTOX_FILE_NAME_LENGTH * 2);
-            path[0]               = '\"';
-            path[path_length + 1] = '\"';
-            path[path_length + 2] = '\0';
-            path_length += 2;
-
-            RegSetKeyValueW(hKey, NULL, L"uTox", REG_SZ, path, path_length * 2);
-            RegCloseKey(hKey);
-        }
-    } else {
-        HKEY hKey;
-        if (RegOpenKeyW(HKEY_CURRENT_USER, run_key_path, &hKey) == ERROR_SUCCESS) {
-            RegDeleteKeyValueW(hKey, NULL, L"uTox");
-            RegCloseKey(hKey);
-        }
-    }
-}

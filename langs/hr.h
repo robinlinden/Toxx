@@ -367,9 +367,6 @@ msgstr("Nije moguće učitati izabranu datoteku ili je datoteka prazna.")
 msgid(CLEAR_HISTORY)
 msgstr("Obriši povijest")
 
-msgid(AUTO_STARTUP)
-msgstr("Pokreni pri podizanju sustava")
-
 msgid(THEME)
 msgstr("Tema")
 

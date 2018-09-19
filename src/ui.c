@@ -142,8 +142,7 @@ static void settings_UI(void) {
     CREATE_SWITCH(save_chat_history, 10, 60,  _BM_SWITCH_WIDTH, _BM_SWITCH_HEIGHT);
     CREATE_SWITCH(close_to_tray,     10, 90,  _BM_SWITCH_WIDTH, _BM_SWITCH_HEIGHT);
     CREATE_SWITCH(start_in_tray,     10, 120, _BM_SWITCH_WIDTH, _BM_SWITCH_HEIGHT);
-    CREATE_SWITCH(auto_startup,      10, 150, _BM_SWITCH_WIDTH, _BM_SWITCH_HEIGHT);
-    CREATE_SWITCH(mini_contacts,     10, 180, _BM_SWITCH_WIDTH, _BM_SWITCH_HEIGHT);
+    CREATE_SWITCH(mini_contacts,     10, 150, _BM_SWITCH_WIDTH, _BM_SWITCH_HEIGHT);
 }
 
 static void settings_AV(void) {

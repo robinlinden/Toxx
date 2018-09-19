@@ -268,9 +268,6 @@ msgstr("Finner ikke valgt fil eller filen er tom.")
 msgid(CLEAR_HISTORY)
 msgstr("Fjern historikk")
 
-msgid(AUTO_STARTUP)
-msgstr("Start ved systemoppstart")
-
 msgid(THEME)
 msgstr("Tema")
 

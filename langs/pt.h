@@ -282,9 +282,6 @@ msgstr("Ficheiro não encontrado ou em branco.")
 msgid(CLEAR_HISTORY)
 msgstr("Limpar historico")
 
-msgid(AUTO_STARTUP)
-msgstr("Inicializar ao arranque de sistema")
-
 msgid(THEME)
 msgstr("Aparência")
 

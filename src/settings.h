@@ -45,7 +45,6 @@ typedef struct utox_settings {
     bool logging_enabled;
     bool close_to_tray;
     bool start_in_tray;
-    bool start_with_system;
     bool use_mini_flist;
     bool magic_flist_enabled;
 
@@ -88,7 +87,7 @@ typedef struct utox_save {
     uint8_t audio_filtering_enabled : 1;
     uint8_t close_to_tray : 1;
     uint8_t start_in_tray : 1;
-    uint8_t auto_startup : 1;
+    uint8_t auto_startup : 1; // Unused, included here because compatability.
     uint8_t no_typing_notifications : 1;
 
     uint16_t audio_device_in;

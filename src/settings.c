@@ -54,7 +54,6 @@ SETTINGS settings = {
     .logging_enabled        = true,
     .close_to_tray          = false,
     .start_in_tray          = false,
-    .start_with_system      = false,
     .use_mini_flist         = false,
     .magic_flist_enabled    = false,
 
@@ -141,8 +140,6 @@ UTOX_SAVE *config_load(void) {
     // -- Grayhatter, probably...
     switch_proxy_force.switch_on = false;
 
-    switch_auto_startup.switch_on = save->auto_startup;
-
     settings.group_notifications = dropdown_global_group_notifications.selected =
         dropdown_global_group_notifications.over = save->group_notifications;
 
@@ -183,7 +180,6 @@ UTOX_SAVE *config_load(void) {
     settings.logging_enabled        = save->logging_enabled;
     settings.close_to_tray          = save->close_to_tray;
     settings.start_in_tray          = save->start_in_tray;
-    settings.start_with_system      = save->auto_startup;
     settings.use_mini_flist         = save->use_mini_flist;
     settings.magic_flist_enabled    = save->magic_flist_enabled;
 
@@ -252,7 +248,6 @@ void config_save(UTOX_SAVE *save_in) {
     save->logging_enabled               = settings.logging_enabled;
     save->close_to_tray                 = settings.close_to_tray;
     save->start_in_tray                 = settings.start_in_tray;
-    save->auto_startup                  = settings.start_with_system;
     save->use_mini_flist                = settings.use_mini_flist;
     save->magic_flist_enabled           = settings.magic_flist_enabled;
 

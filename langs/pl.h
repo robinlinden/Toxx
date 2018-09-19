@@ -586,9 +586,6 @@ msgstr("Nie można znaleźć wybranego pliku lub wybrany plik jest pusty.")
 msgid(CLEAR_HISTORY)
 msgstr("Wyczyść historię")
 
-msgid(AUTO_STARTUP)
-msgstr("Uruchamiaj wraz ze startem systemu")
-
 msgid(THEME)
 msgstr("Motyw")
 
