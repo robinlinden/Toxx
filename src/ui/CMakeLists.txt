@@ -1,6 +1,6 @@
-project(utoxUI LANGUAGES C)
+project(utoxx_ui LANGUAGES C)
 
-add_library(utoxUI STATIC
+add_library(utoxx_ui STATIC
     button.c
     contextmenu.c
     contextmenu.h
@@ -21,4 +21,4 @@ add_library(utoxUI STATIC
     tooltip.h
     )
 
-target_link_libraries(utoxUI utoxLAYOUT)
+target_link_libraries(utoxx_ui utoxx_layout)

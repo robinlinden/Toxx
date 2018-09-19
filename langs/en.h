@@ -332,7 +332,7 @@ msgid(USER_INTERFACE)
 msgstr("User Interface")
 
 msgid(UTOX_SETTINGS)
-msgstr("uTox Settings")
+msgstr("uToxx Settings")
 
 msgid(NETWORK_SETTINGS)
 msgstr("Network Settings")

@@ -261,7 +261,7 @@ msgid(USER_INTERFACE)
 msgstr("Interface utilisateur")
 
 msgid(UTOX_SETTINGS)
-msgstr("Paramètres de uTox")
+msgstr("Paramètres de uToxx")
 
 msgid(NETWORK_SETTINGS)
 msgstr("Paramètres réseau")

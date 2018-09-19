@@ -134,7 +134,7 @@ msgid(USER_INTERFACE)
 msgstr("Interfaccia Utente")
 
 msgid(UTOX_SETTINGS)
-msgstr("Impostazioni uTox")
+msgstr("Impostazioni uToxx")
 
 msgid(NETWORK_SETTINGS)
 msgstr("Impostazioni Rete")

@@ -1,13 +1,13 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=uTox
+Name=uToxx
 Comment=A lightweight Tox client
 Comment[ru]=легковесный клиент Tox
 Comment[de]=Ein leichtgewichtiger Tox Client
-TryExec=utox
-Exec=utox
-Icon=utox
+TryExec=utoxx
+Exec=utoxx
+Icon=utoxx
 Categories=InstantMessaging;AudioVideo;Network;
 Terminal=false
 MimeType=x-scheme-handler/tox;

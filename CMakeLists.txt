@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
-project(uTox LANGUAGES C)
+project(uToxx LANGUAGES C)
 
 
 #####################
@@ -7,11 +7,11 @@ project(uTox LANGUAGES C)
 #####################
 
 set(PROJECT_VERSION_MAJOR "0")
-set(PROJECT_VERSION_MINOR "15")
+set(PROJECT_VERSION_MINOR "0")
 set(PROJECT_VERSION_PATCH "0")
 set(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 
-set(PROJECT_COPYRIGHT "Copyleft 2017 uTox contributors. Some rights reserved.")
+set(PROJECT_COPYRIGHT "Copyright 2018 uTox[x] contributors. Some rights reserved.")
 
 
 ########################
@@ -70,8 +70,7 @@ endif()
 # Options #
 ###########
 
-option(UTOX_STATIC        "Link uTox statically"                                 ${STATIC_DEFAULT} )
-option(TOXCORE_STATIC     "Build uTox with the static version of Toxcore"        ${STATIC_DEFAULT} )
+option(UTOX_STATIC        "Link uToxx statically"                                ${STATIC_DEFAULT} )
 option(ENABLE_ASAN        "Enable Address Sanitizer on debug builds"               ${ASAN_DEFAULT} )
 option(ENABLE_WERROR      "Error on Warning, whether to put -Werror flag to the compiler"       OFF)
 option(ENABLE_FILTERAUDIO "Enable Filter Audio"                                                 ON )
@@ -102,14 +101,8 @@ endif()
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 # make version available in C files
-configure_file(${uTox_SOURCE_DIR}/src/branding.h.in
-               ${uTox_SOURCE_DIR}/src/branding.h)
-
-if(${CMAKE_BUILD_TYPE} MATCHES Debug)
-    execute_process(COMMAND git describe --abbrev=8 --dirty --always --tags
-                    OUTPUT_VARIABLE GIT_VERSION)
-    string(REPLACE "\n" " " GIT_VERSION ${GIT_VERSION})
-endif()
+configure_file(${uToxx_SOURCE_DIR}/src/branding.h.in
+               ${uToxx_SOURCE_DIR}/src/branding.h)
 
 
 ####################
@@ -181,11 +174,6 @@ else()
     message(STATUS "Unknown compiler name: You may have to set up your compiler flags yourself.")
 endif()
 
-# set define for GIT_VERSION
-if(GIT_VERSION)
-    add_cflag("-DGIT_VERSION='\"${GIT_VERSION}\"'")
-endif()
-
 
 #################
 # Build options #
@@ -241,11 +229,8 @@ elseif(UNIX)
     endif()
 endif()
 
-# include utoxLAYOUT
 add_subdirectory(src/layout)
-# include utoxUI
 add_subdirectory(src/ui)
-# include utoxAV
 add_subdirectory(src/av)
 
 
@@ -253,7 +238,7 @@ add_subdirectory(src/av)
 # uTox main #
 #############
 
-add_executable(utox ${GUI_TYPE}
+add_executable(utoxx ${GUI_TYPE}
     src/avatar.c
     src/chatlog.c
     src/chrono.c
@@ -285,14 +270,14 @@ add_executable(utox ${GUI_TYPE}
     ${WINDOWS_ICON}
     )
 
-target_link_libraries(utox
-        utoxAV        utoxNATIVE      utoxUI
+target_link_libraries(utoxx
+        utoxx_av      utoxx_native    utoxx_ui
         ${TOX_LIBS}   ${LIBRARIES}
         vpx           pthread         m )
 
-set_property(TARGET utox PROPERTY C_STANDARD 11)
+set_property(TARGET utoxx PROPERTY C_STANDARD 11)
 if(UNIX)
-    install(TARGETS utox
+    install(TARGETS utoxx
         RUNTIME DESTINATION "bin"
         )
 endif()
@@ -307,7 +292,6 @@ message("- Add ASAN:                ${ENABLE_ASAN}")
 message("- Error on Warning:        ${ENABLE_WERROR}")
 message("- Filter Audio:            ${ENABLE_FILTERAUDIO}")
 message("- uTox Static:             ${UTOX_STATIC}")
-message("- Toxcore Static:          ${TOXCORE_STATIC}")
 
 message("* CMake system is '${CMAKE_SYSTEM_NAME}'")
 message("* CMake build type is '${CMAKE_BUILD_TYPE}'")

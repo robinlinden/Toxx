@@ -346,7 +346,7 @@ msgid(USER_INTERFACE)
 msgstr("Gränssnitt")
 
 msgid(UTOX_SETTINGS)
-msgstr("uToxinställningar")
+msgstr("uToxxinställningar")
 
 msgid(NETWORK_SETTINGS)
 msgstr("Nätverksinställningar")

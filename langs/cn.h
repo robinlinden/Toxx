@@ -188,7 +188,7 @@ msgid(USER_INTERFACE)
 msgstr("界面")
 
 msgid(UTOX_SETTINGS)
-msgstr("uTox设置")
+msgstr("uToxx设置")
 
 msgid(NETWORK_SETTINGS)
 msgstr("网络设置")

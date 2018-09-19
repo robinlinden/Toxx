@@ -30,24 +30,10 @@
 #include <string.h>
 
 /* Top bar for user settings */
-static void draw_settings_header(int x, int y, int w, int UNUSED(height)) {
-    (void)w; // Silence an irrelevant warning when GIT_VERSION is undefined
+static void draw_settings_header(int x, int y, int UNUSED(w), int UNUSED(height)) {
     setcolor(COLOR_MAIN_TEXT);
     setfont(FONT_SELF_NAME);
     drawstr(x + SCALE(10), y + SCALE(10), UTOX_SETTINGS);
-#ifdef GIT_VERSION
-    setfont(FONT_TEXT);
-    char ver_string[64];
-    int  count = snprintf(ver_string, 64, "Toxcore v%u.%u.%u",
-                            tox_version_major(), tox_version_minor(), tox_version_patch());
-    drawtextwidth_right(x + w - textwidth(ver_string, count) , textwidth(ver_string, count),
-                        SCALE(10), ver_string, count);
-
-    setfont(FONT_SELF_NAME); // x adjustment depends on the font type being set first
-    x += SCALE(25) + UTOX_STR_WIDTH(UTOX_SETTINGS);
-    setfont(FONT_TEXT);
-    drawtext(x, SCALE(10), GIT_VERSION, strlen(GIT_VERSION));
-#endif
 }
 
 #define DRAW_UNDERLINE() drawhline(x, y + SCALE(28), next_x, COLOR_EDGE_NORMAL)

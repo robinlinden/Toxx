@@ -312,7 +312,7 @@ msgid(USER_INTERFACE)
 msgstr("Oberfläche") // "Benutzeroberfläche" doesn't fit into tab header (Settings)
 
 msgid(UTOX_SETTINGS)
-msgstr("Einstellungen") // "uTox Einstellungen" would overlap with version (Settings)
+msgstr("uToxx Einstellungen")
 
 msgid(NETWORK_SETTINGS)
 msgstr("Netzwerkeinstellungen")

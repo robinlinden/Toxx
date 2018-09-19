@@ -333,7 +333,7 @@ msgid(USER_INTERFACE)
 msgstr("Интерфейс")
 
 msgid(UTOX_SETTINGS)
-msgstr("Настройки uTox")
+msgstr("Настройки uToxx")
 
 msgid(NETWORK_SETTINGS)
 msgstr("Настройки сети")

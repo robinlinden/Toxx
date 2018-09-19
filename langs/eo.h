@@ -179,7 +179,7 @@ msgid(USER_INTERFACE)
 msgstr("Uzanta Fasado")
 
 msgid(UTOX_SETTINGS)
-msgstr("Agordoj de uTox")
+msgstr("Agordoj de uToxx")
 
 msgid(NETWORK_SETTINGS)
 msgstr("Retaj Agordoj")

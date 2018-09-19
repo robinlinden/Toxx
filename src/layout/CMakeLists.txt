@@ -1,6 +1,6 @@
-project(utoxLAYOUT LANGUAGES C)
+project(utoxx_layout LANGUAGES C)
 
-add_library(utoxLAYOUT STATIC
+add_library(utoxx_layout STATIC
     friend.c
     group.c
     notify.c

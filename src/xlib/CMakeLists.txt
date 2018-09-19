@@ -1,4 +1,4 @@
-project(utoxNATIVE LANGUAGES C)
+project(utoxx_native LANGUAGES C)
 
 option(ENABLE_DBUS "Compile with dbus notification support" ON)
 
@@ -13,8 +13,8 @@ endif()
 ## Native Icon data
 #########################################
 add_custom_command(OUTPUT icon.o
-    COMMAND cd ${uTox_SOURCE_DIR}/ && ld -r -b binary -o ${utoxNATIVE_BINARY_DIR}/icon.o icons/utox-128x128.png
-    DEPENDS ../../icons/utox-128x128.png )
+    COMMAND cd ${uToxx_SOURCE_DIR}/ && ld -r -b binary -o ${utoxx_native_BINARY_DIR}/icon.o icons/utoxx-128x128.png
+    DEPENDS ../../icons/utoxx-128x128.png )
 set_source_files_properties( icon.o PROPERTIES EXTERNAL_OBJECT true GENERATED true )
 add_library(icon STATIC icon.o)
 set_target_properties( icon PROPERTIES LINKER_LANGUAGE C )
@@ -22,7 +22,7 @@ set_target_properties( icon PROPERTIES LINKER_LANGUAGE C )
 #########################################
 ## Native Interface
 #########################################
-add_library(utoxNATIVE STATIC
+add_library(utoxx_native STATIC
     audio.c
     dbus.c
     dbus.h
@@ -66,7 +66,7 @@ else()
     set(DBUS_LIBRARIES "")
 endif()
 
-target_link_libraries(utoxNATIVE
+target_link_libraries(utoxx_native
         icon
         v4lconvert
         ${X11_LIBRARIES}
@@ -76,13 +76,13 @@ target_link_libraries(utoxNATIVE
         )
 
 if(LINUX OR NETBSD)
-    target_link_libraries(utoxNATIVE
+    target_link_libraries(utoxx_native
         resolv
         )
 endif()
 
 if(LINUX)
-    target_link_libraries(utoxNATIVE
+    target_link_libraries(utoxx_native
         dl
         ${DBUS_LIBRARIES}
         )
@@ -91,76 +91,76 @@ endif()
 include(GNUInstallDirs)
 
 install(FILES
-    ../utox.desktop
+    ../utoxx.desktop
     DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/applications"
     )
 
 install(FILES
-   ../../icons/utox-14x14.png
+   ../../icons/utoxx-14x14.png
     DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/14x14/apps"
     )
 
 install(FILES
-   ../../icons/utox-16x16.png
+   ../../icons/utoxx-16x16.png
     DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/16x16/apps"
     )
 
 install(FILES
-   ../../icons/utox-22x22.png
+   ../../icons/utoxx-22x22.png
     DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/22x22/apps"
     )
 
 install(FILES
-   ../../icons/utox-24x24.png
+   ../../icons/utoxx-24x24.png
     DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/24x24/apps"
     )
 
 install(FILES
-   ../../icons/utox-32x32.png
+   ../../icons/utoxx-32x32.png
     DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/32x32/apps"
     )
 
 install(FILES
-   ../../icons/utox-36x36.png
+   ../../icons/utoxx-36x36.png
     DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/36x36/apps"
     )
 
 install(FILES
-   ../../icons/utox-48x48.png
+   ../../icons/utoxx-48x48.png
     DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/48x48/apps"
     )
 
 install(FILES
-   ../../icons/utox-64x64.png
+   ../../icons/utoxx-64x64.png
     DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/64x64/apps"
     )
 
 install(FILES
-   ../../icons/utox-72x72.png
+   ../../icons/utoxx-72x72.png
     DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/72x72/apps"
     )
 
 install(FILES
-   ../../icons/utox-96x96.png
+   ../../icons/utoxx-96x96.png
     DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/96x96/apps"
     )
 
 install(FILES
-   ../../icons/utox-128x128.png
+   ../../icons/utoxx-128x128.png
     DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/128x128/apps"
     )
 
 install(FILES
-   ../../icons/utox-256x256.png
+   ../../icons/utoxx-256x256.png
     DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/256x256/apps"
     )
 
 install(FILES
-   ../../icons/utox-512x512.png
+   ../../icons/utoxx-512x512.png
     DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/512x512/apps"
     )
 
 install(FILES
-   ../../icons/utox.svg
+   ../../icons/utoxx.svg
     DESTINATION "${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/scalable/apps"
     )

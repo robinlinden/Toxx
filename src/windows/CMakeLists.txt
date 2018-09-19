@@ -1,4 +1,4 @@
-project(utoxNATIVE LANGUAGES C)
+project(utoxx_native LANGUAGES C)
 
 #########################################
 ## Native Icon data
@@ -8,7 +8,7 @@ enable_language(RC)
 #########################################
 ## Native Interface
 #########################################
-add_library(utoxNATIVE STATIC
+add_library(utoxx_native STATIC
     audio.c
     dnd.c
     drawing.c
@@ -25,7 +25,7 @@ add_library(utoxNATIVE STATIC
     main.7.c
     )
 
-target_link_libraries(utoxNATIVE
+target_link_libraries(utoxx_native
     iphlpapi    ws2_32     gdi32 msimg32
     comdlg32    winmm      ole32 oleaut32
     strmiids    shell32    opus
