@@ -13,11 +13,6 @@ extern uint16_t loaded_audio_in_device, loaded_audio_out_device;
 #define MAIN_HEIGHT 500
 
 typedef struct utox_settings {
-    // uTox versions settings
-    uint32_t last_version;
-    uint32_t curr_version;
-    uint32_t next_version;
-
     // Low level settings (network, profile, portable-mode)
     bool portable_mode;
 
@@ -60,9 +55,7 @@ typedef struct utox_settings {
     uint32_t window_y;
     uint32_t window_height;
     uint32_t window_width;
-    uint32_t window_baseline;
 
-    bool window_maximized;
     uint8_t video_fps;
 } SETTINGS;
 
@@ -101,8 +94,7 @@ typedef struct utox_save {
     uint8_t status_notifications : 1;
     uint8_t magic_flist_enabled  : 1;
 
-    uint32_t utox_last_version; // I don't like this here either,
-    // but I'm not ready to rewrite and update this struct yet.
+    uint32_t utox_last_version;      // Unused, included here because compatability.
 
     uint8_t auto_update         : 1; // Unused, included here because compatability.
     uint8_t update_to_develop   : 1; // Unused, included here because compatability.

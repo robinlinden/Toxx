@@ -154,18 +154,6 @@ LRESULT CALLBACK WindowProc(HWND window, UINT msg, WPARAM wParam, LPARAM lParam)
         }
 
         case WM_SIZE: {
-            switch (wParam) {
-                case SIZE_MAXIMIZED: {
-                    settings.window_maximized = true;
-                    break;
-                }
-
-                case SIZE_RESTORED: {
-                    settings.window_maximized = false;
-                    break;
-                }
-            }
-
             int w = GET_X_LPARAM(lParam);
             int h = GET_Y_LPARAM(lParam);
 

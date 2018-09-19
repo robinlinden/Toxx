@@ -46,10 +46,6 @@ void edit_draw(EDIT *edit, int x, int y, int width, int height) {
         return;
     }
 
-    if (settings.window_baseline && y > (int)settings.window_baseline - font_small_lineheight - SCALE(8)) {
-        y = settings.window_baseline - font_small_lineheight - SCALE(8);
-    }
-
     edit->width  = width - SCALE(8) - (edit->multiline ? SCALE(SCROLL_WIDTH) : 0);
     edit->height = height - SCALE(8);
 
@@ -136,11 +132,6 @@ void edit_draw(EDIT *edit, int x, int y, int width, int height) {
 }
 
 bool edit_mmove(EDIT *edit, int px, int py, int width, int height, int x, int y, int dx, int dy) {
-    if (settings.window_baseline && py > (int)settings.window_baseline - font_small_lineheight - SCALE(8)) {
-        y += py - (settings.window_baseline - font_small_lineheight - SCALE(8));
-        py = settings.window_baseline - font_small_lineheight - SCALE(8);
-    }
-
     bool need_redraw = 0;
 
     bool mouseover = inrect(x, y, 0, 0, width - (edit->multiline ? SCALE(SCROLL_WIDTH) : 0), height);

@@ -22,10 +22,6 @@ uint16_t loaded_audio_out_device = 0;
 uint16_t loaded_audio_in_device  = 0;
 
 SETTINGS settings = {
-    // .last_version                // included here to match the full struct
-    .curr_version = UTOX_VERSION_NUMBER,
-    .next_version = UTOX_VERSION_NUMBER,
-
     // Low level settings (network, profile, portable-mode)
     .enable_udp     = true,
     .enable_ipv6    = true,
@@ -66,13 +62,10 @@ SETTINGS settings = {
 
     // .theme                       // included here to match the full struct
     // OS interface settings
-    .window_x             = 0,
-    .window_y             = 0,
-    .window_height        = MAIN_HEIGHT,
-    .window_width         = MAIN_WIDTH,
-    .window_baseline      = 0,
-
-    .window_maximized     = 0,
+    .window_x      = 0,
+    .window_y      = 0,
+    .window_height = MAIN_HEIGHT,
+    .window_width  = MAIN_WIDTH,
 };
 
 void parse_args(int argc, char *argv[]) {
@@ -192,8 +185,6 @@ UTOX_SAVE *config_load(void) {
     settings.window_width           = save->window_width;
     settings.window_height          = save->window_height;
 
-    settings.last_version           = save->utox_last_version;
-
     loaded_audio_out_device         = save->audio_device_out;
     loaded_audio_in_device          = save->audio_device_in;
 
@@ -264,7 +255,6 @@ void config_save(UTOX_SAVE *save_in) {
     save->audio_device_out = dropdown_audio_out.selected;
     save->theme            = settings.theme;
 
-    save->utox_last_version    = settings.curr_version;
     save->group_notifications  = settings.group_notifications;
     save->status_notifications = settings.status_notifications;
 
