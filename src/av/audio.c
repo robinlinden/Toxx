@@ -530,8 +530,8 @@ void utox_audio_thread(void *args) {
     time_t close_device_time = 0;
     ToxAV *av = args;
 
-    const int perframe = (UTOX_DEFAULT_FRAME_A * UTOX_DEFAULT_SAMPLE_RATE_A) / 1000;
-    uint8_t buf[perframe * 2 * UTOX_DEFAULT_AUDIO_CHANNELS]; //, dest[perframe * 2 * UTOX_DEFAULT_AUDIO_CHANNELS];
+    enum { perframe = (UTOX_DEFAULT_FRAME_A * UTOX_DEFAULT_SAMPLE_RATE_A) / 1000 };
+    uint8_t buf[perframe * 2 * UTOX_DEFAULT_AUDIO_CHANNELS];
     memset(buf, 0, sizeof(buf));
 
     /* init Microphone */
