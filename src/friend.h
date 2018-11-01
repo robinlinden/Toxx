@@ -151,7 +151,7 @@ void friend_free(FRIEND *f);
 FRIEND *find_friend_by_name(uint8_t *name);
 
 /* Notifies the user that a friend is online or offline */
-void friend_notify_status(FRIEND *f, const uint8_t *msg, size_t msg_length, char *state);
+void friend_notify_status(FRIEND *f, const uint8_t *msg, size_t msg_length, const char *state);
 
 // Saves user meta data to disk
 void utox_write_metadata(FRIEND *f);
