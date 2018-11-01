@@ -142,7 +142,6 @@ add_cflag("-Werror=implicit-function-declaration")
 
 ## Warnings we don't care about
 add_cflag("-Wformat=0")
-add_cflag("-Wno-misleading-indentation")
 
 ## Everything Else
 add_cflag("-fno-strict-aliasing")
