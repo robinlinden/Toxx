@@ -303,12 +303,11 @@ void group_notify_msg(GROUPCHAT *g, const char *msg, size_t msg_length) {
         return;
     }
 
-    char title[g->name_length + 25];
-
-    size_t title_length = snprintf(title, g->name_length + 25, "uTox new message in %.*s",
-                                   g->name_length, g->name);
-
+    char *title = malloc(g->name_length + 25);
+    const size_t title_length = snprintf(title, g->name_length + 25, "uTox new message in %.*s",
+                                         g->name_length, g->name);
     notify(title, title_length, msg, msg_length, g, 1);
+    free(title);
 
     if (flist_get_groupchat() != g) {
         postmessage_audio(UTOXAUDIO_PLAY_NOTIFICATION, NOTIFY_TONE_FRIEND_NEW_MSG, 0, NULL);

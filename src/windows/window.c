@@ -54,8 +54,8 @@ UTOX_WINDOW *native_window_create_main(int x, int y, int w, int h) {
 
     char pretitle[128];
     snprintf(pretitle, 128, "%s %s (version : %s)", TITLE, SUB_TITLE, VERSION);
-    size_t  title_size = strlen(pretitle) + 1;
-    wchar_t title[title_size];
+    size_t title_size = strlen(pretitle) + 1;
+    wchar_t title[128];
     mbstowcs(title, pretitle, title_size);
 
 
@@ -97,10 +97,10 @@ UTOX_WINDOW *native_window_create_notify(int x, int y, int w, int h, PANEL *pane
     };
     RegisterClassW(&notify_window_class);
 
-    char pre[128];
-    snprintf(pre, 128, "uTox popup window %u", notification_number++);
+    char pre[64];
+    snprintf(pre, 64, "uTox popup window %u", notification_number++);
     size_t  title_size = strlen(pre) + 1;
-    wchar_t title[title_size];
+    wchar_t title[64];
     mbstowcs(title, pre, title_size);
 
     HWND window = CreateWindowExW(WS_EX_TOPMOST | WS_EX_TOOLWINDOW, class_name, title, WS_POPUP,
