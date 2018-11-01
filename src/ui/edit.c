@@ -108,7 +108,7 @@ void edit_draw(EDIT *edit, int x, int y, int width, int height) {
     bool is_active = (edit == active_edit);
     if (edit->password) {
         /* Generate the stars for this password */
-        char star[edit->length];
+        char *star = malloc(edit->length);
         memset(star, '*', edit->length);
         utox_draw_text_multiline_within_box(x + SCALE(4), yy + SCALE(top_offset * 2),
                                                 x + width - SCALE(4) - (edit->multiline ? SCALE(SCROLL_WIDTH) : 0),
@@ -117,6 +117,7 @@ void edit_draw(EDIT *edit, int x, int y, int width, int height) {
                                                 is_active ? edit_sel.length : UINT16_MAX,
                                                 is_active ? edit_sel.mark_start : 0,
                                                 is_active ? edit_sel.mark_length : 0, edit->multiline);
+        free(star);
     } else {
         utox_draw_text_multiline_within_box(x + SCALE(4), yy + SCALE(top_offset * 2),
                                     x + width - SCALE(4) - (edit->multiline ? SCALE(SCROLL_WIDTH) : 0),

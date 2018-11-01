@@ -1062,14 +1062,16 @@ static void outgoing_file_callback_chunk(Tox *tox, uint32_t friend_number, uint3
     } else {
         // Ft is a file
         if (ft->via.file) {
-            uint8_t buffer[length];
+            uint8_t *buffer = malloc(length);
             fseeko(ft->via.file, position, SEEK_SET);
             if (fread(buffer, length, 1, ft->via.file) != 1) {
                 ft_local_control(tox, friend_number, file_number, TOX_FILE_CONTROL_CANCEL);
+                free(buffer);
                 return;
             }
 
             tox_file_send_chunk(tox, friend_number, file_number, position, buffer, length, NULL);
+            free(buffer);
         }
         calculate_speed(ft);
     }
