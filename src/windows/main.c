@@ -30,7 +30,7 @@
 #include "../native/os.h"
 #include "../native/window.h"
 
-#include "../layout/background.h" // TODO do we want to remove this?
+#include "../layout/background.h" // TODO do we want to remove this? Yes.
 #include "../layout/friend.h"
 #include "../layout/group.h"
 #include "../layout/settings.h" // TODO remove, in for dropdown.lang
@@ -215,17 +215,16 @@ void setselection(char *UNUSED(data), uint16_t UNUSED(length)) {
 }
 
 void copy(int value) {
-    const uint16_t max_size = INT16_MAX + 1;
-    char data[max_size]; //! TODO: De-hardcode this value.
+    char data[INT16_MAX + 1]; //! TODO: De-hardcode this value.
     int len = 0;
 
     if (edit_active()) {
-        len = edit_copy(data, max_size - 1);
+        len = edit_copy(data, sizeof data - 1);
         data[len] = 0;
     } else if (flist_get_friend()) {
-        len = messages_selection(&messages_friend, data, max_size, value);
+        len = messages_selection(&messages_friend, data, sizeof data, value);
     } else if (flist_get_groupchat()) {
-        len = messages_selection(&messages_group, data, max_size, value);
+        len = messages_selection(&messages_group, data, sizeof data, value);
     } else {
         return;
     }
@@ -701,12 +700,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE UNUSED(hPrevInstance), PSTR cm
 
     settings.window_width  = MAX((uint32_t)SCALE(MAIN_WIDTH), settings.window_width);
     settings.window_height = MAX((uint32_t)SCALE(MAIN_HEIGHT), settings.window_height);
-
-    char pretitle[128];
-    snprintf(pretitle, 128, "%s %s (version : %s)", TITLE, SUB_TITLE, VERSION);
-    size_t  title_size = strlen(pretitle) + 1;
-    wchar_t title[title_size];
-    mbstowcs(title, pretitle, title_size);
 
     native_window_create_main(settings.window_x, settings.window_y, settings.window_width, settings.window_height);
 
