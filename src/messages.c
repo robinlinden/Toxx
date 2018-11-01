@@ -761,8 +761,8 @@ static void messages_draw_filetransfer(MESSAGES *m, MSG_FILE *file, uint32_t i, 
         file_percent = 1.0;
     }
 
-    int max = file->name_length + 128;
-    char ft_text[max];
+    const int max = file->name_length + 128;
+    char *const ft_text = calloc(1, max);
     char *text = ft_text;
 
     text += snprintf(text, max, "%.*s ", (int)file->name_length, file->name);
@@ -894,6 +894,8 @@ static void messages_draw_filetransfer(MESSAGES *m, MSG_FILE *file, uint32_t i, 
 
     setfont(FONT_TEXT);
     drawtextrange(dx + SCALE(10), wbound - SCALE(10), y + SCALE(6), ft_text, text - ft_text);
+
+    free(ft_text);
 }
 
 /* This is a bit hacky, and likely would benifit from being moved to a whole new section including seperating
@@ -1528,10 +1530,10 @@ bool messages_mup(PANEL *panel) {
                 && m->cursor_over_position <= m->cursor_over_uri + m->urllen - 1 /* - 1 Don't open on white space */
                 && !m->selecting_text)
             {
-                char url[m->urllen + 1];
+                char *url = calloc(1, m->urllen + 1);
                 memcpy(url, msg->via.txt.msg + m->cursor_over_uri, m->urllen);
-                url[m->urllen] = 0;
                 openurl(url);
+                free(url);
                 m->cursor_down_uri = 0;
             }
         }
