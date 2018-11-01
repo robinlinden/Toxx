@@ -57,7 +57,7 @@ void postmessage_toxcore(uint8_t msg, uint32_t param1, uint32_t param2, void *da
     }
 
     if (!tox_thread_init) {
-        /* Tox is not yet active, drop message (Probably a mistake) */
+        // Tox is not yet active, drop message (Probably a mistake)
         return;
     }
 
@@ -69,19 +69,18 @@ void postmessage_toxcore(uint8_t msg, uint32_t param1, uint32_t param2, void *da
     tox_thread_msg = true;
 }
 
-static int utox_encrypt_data(void *clear_text, size_t clear_length, uint8_t *cypher_data) {
+static int utox_encrypt_data(uint8_t *clear_text, size_t clear_length, uint8_t *cypher_data) {
     size_t passphrase_length = edit_profile_password.length;
 
     if (passphrase_length < 4) {
         return UTOX_ENC_ERR_LENGTH;
     }
 
-    uint8_t passphrase[passphrase_length];
+    uint8_t *passphrase = malloc(passphrase_length);
     memcpy(passphrase, edit_profile_password.data, passphrase_length);
     TOX_ERR_ENCRYPTION err = 0;
-
-    tox_pass_encrypt((uint8_t *)clear_text, clear_length, (uint8_t *)passphrase, passphrase_length,
-                     cypher_data, &err);
+    tox_pass_encrypt(clear_text, clear_length, passphrase, passphrase_length, cypher_data, &err);
+    free(passphrase);
 
     if (err) {
         exit(1);
@@ -101,10 +100,11 @@ static UTOX_ENC_ERR utox_decrypt_data(
         return UTOX_ENC_ERR_LENGTH;
     }
 
-    uint8_t passphrase[passphrase_length];
+    uint8_t *passphrase = malloc(passphrase_length);
     memcpy(passphrase, edit_profile_password.data, passphrase_length);
     TOX_ERR_DECRYPTION err = TOX_ERR_DECRYPTION_FAILED;
     tox_pass_decrypt(cypher_data, cypher_length, passphrase, passphrase_length, clear_text, &err);
+    free(passphrase);
 
     switch (err) {
         case TOX_ERR_DECRYPTION_OK: {
@@ -178,8 +178,8 @@ static void write_save(Tox *tox) {
     size_t clear_length     = tox_get_savedata_size(tox);
     size_t encrypted_length = clear_length + TOX_PASS_ENCRYPTION_EXTRA_LENGTH;
 
-    uint8_t clear_data[clear_length];
-    uint8_t encrypted_data[encrypted_length];
+    uint8_t *clear_data = malloc(clear_length);
+    uint8_t *encrypted_data = malloc(encrypted_length);
 
     tox_get_savedata(tox, clear_data);
 
@@ -195,6 +195,9 @@ static void write_save(Tox *tox) {
             save_needed = utox_data_save_tox(encrypted_data, encrypted_length);
         }
     }
+
+    free(encrypted_data);
+    free(clear_data);
 }
 
 void tox_settingschanged(void) {
