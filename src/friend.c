@@ -350,14 +350,15 @@ void friend_recvimage(FRIEND *f, NATIVE_IMAGE *native_image, uint16_t width, uin
 }
 
 void friend_notify_msg(FRIEND *f, const char *msg, size_t msg_length) {
-    char title[UTOX_FRIEND_NAME_LENGTH(f) + 25];
+    char *title = calloc(1, UTOX_FRIEND_NAME_LENGTH(f) + 25);
 
-    size_t title_length = snprintf((char *)title, UTOX_FRIEND_NAME_LENGTH(f) + 25,
+    size_t title_length = snprintf(title, UTOX_FRIEND_NAME_LENGTH(f) + 25,
                                    "uTox new message from %.*s", (int)UTOX_FRIEND_NAME_LENGTH(f),
                                    UTOX_FRIEND_NAME(f));
 
     postmessage_utox(FRIEND_MESSAGE, f->number, 0, NULL);
     notify(title, title_length, msg, msg_length, f, 0);
+    free(title);
 
     if (flist_get_friend() != f) {
         f->unread_msg = true;
@@ -403,7 +404,7 @@ void friend_add(char *name, uint16_t length, char *msg, uint16_t msg_length) {
         return;
     }
 
-    uint8_t  name_cleaned[length];
+    char *name_cleaned = calloc(1, length);
     uint16_t length_cleaned = 0;
 
     for (unsigned int i = 0; i < length; ++i) {
@@ -415,13 +416,16 @@ void friend_add(char *name, uint16_t length, char *msg, uint16_t msg_length) {
 
     if (!length_cleaned) {
         addfriend_status = ADDF_NONAME;
+        free(name_cleaned);
         return;
     }
 
     uint8_t id[TOX_ADDRESS_SIZE];
-    if (length_cleaned == TOX_ADDRESS_SIZE * 2 && string_to_id(id, (char *)name_cleaned)) {
+    if (length_cleaned == TOX_ADDRESS_SIZE * 2 && string_to_id(id, name_cleaned)) {
         friend_addid(id, msg, msg_length);
     }
+
+    free(name_cleaned);
 }
 
 void friend_history_clear(FRIEND *f) {
@@ -477,14 +481,14 @@ void friend_notify_status(FRIEND *f, const uint8_t *msg, size_t msg_length, char
         return;
     }
 
-    char title[UTOX_FRIEND_NAME_LENGTH(f) + 20];
-    size_t  title_length = snprintf((char *)title, UTOX_FRIEND_NAME_LENGTH(f) + 20, "uTox %.*s is now %s.",
+    char *title = calloc(1, UTOX_FRIEND_NAME_LENGTH(f) + 20);
+    size_t title_length = snprintf(title, UTOX_FRIEND_NAME_LENGTH(f) + 20, "uTox %.*s is now %s.",
                                    (int)UTOX_FRIEND_NAME_LENGTH(f), UTOX_FRIEND_NAME(f), state);
+    notify(title, title_length, (const char *)msg, msg_length, f, 0);
+    free(title);
 
-    notify(title, title_length, (char *)msg, msg_length, f, 0);
-
-    /* This function is called before the status is changed. so we have to go by the inverse
-     * obviously not ideal, TODO fix later with the friends struct refactor. */
+    // This function is called before the status is changed. so we have to go by the inverse
+    // obviously not ideal, TODO fix later with the friends struct refactor.
     if (f->online) {
         postmessage_audio(UTOXAUDIO_PLAY_NOTIFICATION, NOTIFY_TONE_FRIEND_OFFLINE, 0, NULL);
     } else {
@@ -495,9 +499,8 @@ void friend_notify_status(FRIEND *f, const uint8_t *msg, size_t msg_length, char
 bool string_to_id(uint8_t *w, char *a) {
     uint8_t *end = w + TOX_ADDRESS_SIZE;
     while (w != end) {
-        char c, v;
-
-        c = *a++;
+        char c = *a++;
+        char v;
         if (c >= '0' && c <= '9') {
             v = (c - '0') << 4;
         } else if (c >= 'A' && c <= 'F') {
